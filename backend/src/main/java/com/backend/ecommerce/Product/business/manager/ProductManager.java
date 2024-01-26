@@ -17,7 +17,6 @@ public class ProductManager implements ProductService {
         /*
             Business kuralları konacak
         */
-
         return Flux.just(
                 ProductMainPageResponse.builder()
                         .name("25 in 1 vegetable Chopper with container")
@@ -36,6 +35,5 @@ public class ProductManager implements ProductService {
                                 .build())
                         .build()
         );
-
     }
 }
