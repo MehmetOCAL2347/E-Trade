@@ -1,14 +1,13 @@
 package com.backend.ecommerce.Product.entities.entity;
 
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 //@Document(collection = "product")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 @EqualsAndHashCode(of="id")
@@ -22,7 +21,8 @@ public class Product {
     private String code;
     private int count;  // Stok sayısı
     private boolean isActive;
-    private BigDecimal price;
+    private double starPoint;
+    private double price;
     private PriceType priceType;
     private List<String> description;
     private List<String> comments;
