@@ -1,0 +1,11 @@
+@import '_main.css';
+@import '_header.css';
+@import '_footer.css';
+@import '_variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;400&family=Poppins:wght@200&family=Ubuntu:wght@500&display=swap');
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: var(--font-small-size-px);
+}
