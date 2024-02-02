@@ -1,0 +1,14 @@
+import axios from "axios";
+import config from "@/config";
+const BASE_URL = config.baseUrl;
+const productUrl = "/products";
+const detailProductUrl = "/pd/";
+
+export default {
+  async getAllProducts(){
+    return await axios.get(BASE_URL + productUrl);
+  },
+  async getDetailProduct(code){
+    return await axios.get(BASE_URL + productUrl + detailProductUrl + code)
+  }
+};

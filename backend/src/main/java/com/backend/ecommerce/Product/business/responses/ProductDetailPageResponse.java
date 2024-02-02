@@ -4,17 +4,20 @@ import com.backend.ecommerce.Product.entities.entity.PriceType;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
-public class ProductMainPageResponse {
+public class ProductDetailPageResponse {
 
     private String code;
     private String name;
-    private int count;
-    private boolean isActive;
     private double starPoint;
+    private int count;
     private double price;
     private PriceType priceType;
-    private String url;
+    private String categoryName; // CategoryId'den category name getirilir
+    private String sellerName; // SellerId'den seller name getirilir
+    private List<String> bulletPoints;
 
 }

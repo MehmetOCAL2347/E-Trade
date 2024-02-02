@@ -17,14 +17,13 @@ public class Product {
     private String name;
     private String sellerId;
     private String categoryId;
-    private String brandId;
     private String code;
-    private int count;  // Stok sayısı
+    private int count;
     private boolean isActive;
     private double starPoint;
     private double price;
     private PriceType priceType;
-    private List<String> description;
+    private List<String> bulletPoints;
     private List<String> comments;
     private List<Image> images;
 

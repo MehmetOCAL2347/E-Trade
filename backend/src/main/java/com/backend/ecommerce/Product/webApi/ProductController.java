@@ -1,13 +1,12 @@
 package com.backend.ecommerce.Product.webApi;
 
+import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -21,5 +20,10 @@ public class ProductController {
     @GetMapping()
     public Flux<ProductMainPageResponse> getAllProducts(){
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/pd/{code}")
+    public Mono<ProductDetailPageResponse> getProductDetail(@PathVariable("code") String code){
+        return productService.getProductDetail(code);
     }
 }

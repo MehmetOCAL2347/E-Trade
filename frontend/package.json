@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.3",
@@ -16,6 +17,7 @@
     "popper.js": "^1.16.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue-star-rating": "^2.1.0",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
