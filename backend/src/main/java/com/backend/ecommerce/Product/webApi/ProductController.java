@@ -1,5 +1,6 @@
 package com.backend.ecommerce.Product.webApi;
 
+import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
@@ -18,12 +19,17 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping()
-    public Flux<ProductMainPageResponse> getAllProducts(){
+    public Flux<ProductMainPageResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/pd/{code}")
-    public Mono<ProductDetailPageResponse> getProductDetail(@PathVariable("code") String code){
+    public Mono<ProductDetailPageResponse> getProductDetail(@PathVariable("code") String code) {
         return productService.getProductDetail(code);
+    }
+
+    @GetMapping("/query")
+    public Flux<ProductMainPageResponse> getProductsWithParams(@ModelAttribute ProductFilterRequest filter) {
+        return productService.getProductsWithParams(filter);
     }
 }

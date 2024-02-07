@@ -1,9 +1,9 @@
 package com.backend.ecommerce.Product.business.manager;
 
+import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
-import com.backend.ecommerce.Product.entities.entity.Image;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,19 +12,24 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductManager implements ProductService {
+
+    private List<ProductMainPageResponse> allProducts = new ArrayList<>();
 
     @Override
     public Flux<ProductMainPageResponse> getAllProducts() {
         /*
             Business kuralları konacak
         */
-        List<ProductMainPageResponse> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            list.add(ProductMainPageResponse.builder()
+
+        allProducts.clear();
+
+        for (int i = 0; i < 10; i++) {
+            allProducts.add(ProductMainPageResponse.builder()
                     .code("PRD001")
                     .name("Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
                     .count(25)
@@ -33,10 +38,39 @@ public class ProductManager implements ProductService {
                     .price(25.99)
                     .priceType(PriceType.USD)
                     .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/81qc9Uc5JBL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .categoryName("Kategori - 1")
                     .build());
         }
 
-        return Flux.fromIterable(list);
+        for (int i = 0; i < 10; i++) {
+            allProducts.add(ProductMainPageResponse.builder()
+                    .code("PRD002")
+                    .name("Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
+                    .count(15)
+                    .isActive(true)
+                    .starPoint(3.2)
+                    .price(50.99)
+                    .priceType(PriceType.USD)
+                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/81m5GFr6aeL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .categoryName("Kategori - 2")
+                    .build());
+        }
+
+        for (int i = 0; i < 10; i++) {
+            allProducts.add(ProductMainPageResponse.builder()
+                    .code("PRD003")
+                    .name("VEGGURU Safer Mandoline Food Slicer, Thickness Adjustable Vegetable Chopper, Onion Chopper Potato Slicer Tomato Cutter Dicer, Multifunctional Kithcen Food Fruit Chopper(Blue)")
+                    .count(55)
+                    .isActive(true)
+                    .starPoint(2.7)
+                    .price(150.99)
+                    .priceType(PriceType.USD)
+                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/813H7+vbq6L._AC_SY300_SX300_.jpg")
+                    .categoryName("Kategori - 3")
+                    .build());
+        }
+
+        return Flux.fromIterable(allProducts);
     }
 
     @Override
@@ -58,11 +92,23 @@ public class ProductManager implements ProductService {
                         .count(20)
                         .price(23.99)
                         .priceType(PriceType.USD)
-                        .categoryName("Home & Kitchen")
+                        .categoryName("Kategori - 1")
                         .sellerName("MANDE")
                         .bulletPoints(list)
                         .build()
         );
 
+    }
+
+    @Override
+    public Flux<ProductMainPageResponse> getProductsWithParams(ProductFilterRequest filter) {
+        return Flux.fromIterable(allProducts.stream()
+                .filter(product -> (filter.getCategoryName() == null || product.getCategoryName().equals(filter.getCategoryName()))
+                && (filter.getIsActive() == null || product.getIsActive().equals(filter.getIsActive())))
+                .collect(Collectors.toList()));
+
+        /*.filter(product -> (filter.getCategory() == null || product.getCategory().equals(filter.getCategory()))
+                && (filter.getPrice() == null || product.getPrice() <= filter.getPrice()))
+                .collect(Collectors.toList());*/
     }
 }

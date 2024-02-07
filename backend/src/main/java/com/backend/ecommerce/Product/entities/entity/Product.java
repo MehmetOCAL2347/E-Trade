@@ -19,7 +19,7 @@ public class Product {
     private String categoryId;
     private String code;
     private int count;
-    private boolean isActive;
+    private Boolean isActive;
     private double starPoint;
     private double price;
     private PriceType priceType;

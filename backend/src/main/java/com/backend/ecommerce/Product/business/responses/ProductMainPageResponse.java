@@ -11,10 +11,11 @@ public class ProductMainPageResponse {
     private String code;
     private String name;
     private int count;
-    private boolean isActive;
+    private Boolean isActive;
     private double starPoint;
     private double price;
     private PriceType priceType;
     private String url;
+    private String categoryName;
 
 }

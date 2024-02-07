@@ -10,7 +10,11 @@
       </div>
 
       <div class="col-md-12">
-        <router-link class="seller-link" to="#">{{ getSeller }}</router-link>
+        <router-link class="link" to="#">{{ getSeller }}</router-link>
+      </div>
+
+      <div class="col-md-12">
+        <router-link class="link" to="#">{{ categoryName }}</router-link>
       </div>
 
       <!-- Bu da ayrı bir komponent olabilir-->
@@ -30,7 +34,7 @@
 
 <script>
 export default {
-  props: ["title", "starPoint", "count", "price", "priceType", "sellerName"],
+  props: ["title", "starPoint", "count", "price", "priceType", "sellerName", "categoryName"],
   computed: {
     getSeller() {
       return "Visit the " + this.sellerName;
@@ -51,13 +55,13 @@ export default {
 #product-title {
   font-size: var(--font-size-medium);
 }
-.seller-link {
+.link {
   font-size: var(--font-size-xSmall);
   color: var(--a-color-blue);
   padding-left: 5px;
   font-weight: 500;
 }
-.seller-link:hover {
+.link:hover {
   text-decoration: underline;
   color: var(--font-color-hover);
 }

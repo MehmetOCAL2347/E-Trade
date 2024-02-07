@@ -1,3 +1,12 @@
 #main {
     font-size: var(--font-small-size-px);
 }
+
+.hover-effect:hover {
+    color: var(--font-color-hover);
+    cursor: pointer;
+}
+
+.clear-button:hover {
+    text-decoration: underline;
+}
