@@ -1,8 +1,5 @@
 <template>
   <!-- Kategoriler -->
-  <!-- Kategoriler, backendden gelecek ve döngü ile gösterilecek. -->
-  <!-- Div visible method haline getirilebilir -->
-  <!-- <div v-if="categories.length != 0"> -->
   <div v-if="isComponentVisible">
     <h4 id="categorie-title">Kategoriler</h4>
     <span class="clear-filter hover-effect clear-button" @click="clearFilter()"
@@ -20,9 +17,15 @@
         :value="category.code"
         v-model="selectedCheckboxes"
       />
-      <label class="form-check-label hover-effect" :for="category.code">{{
+      <label
+        class="form-check-label hover-effect"
+        :for="category.code"
+        @click="addFilter(category.name)"
+        >{{ category.name }}</label
+      >
+      <!-- <label class="form-check-label hover-effect" :for="category.code">{{
         category.name
-      }}</label>
+      }}</label> -->
     </div>
   </div>
 </template>
@@ -33,7 +36,7 @@ export default {
     return {
       selectedCheckboxes: [],
       categories: [],
-      isComponentVisible: false
+      isComponentVisible: false,
     };
   },
   watch: {
@@ -48,22 +51,26 @@ export default {
       }
     },
 
-    async getAllCategories(){
+    async getAllCategories() {
       await this.$store.dispatch("getAllCategories");
       this.categories = this.$store.getters.getAllCategories;
-      if(this.categories.length !==0){
+      if (this.categories.length !== 0) {
         this.isComponentVisible = true;
       }
-    }
+    },
+
+    addFilter(categoryName) {
+      this.$router.push({ path: "/products/query", query: { categoryName } });
+    },
   },
-  created(){
-    if(this.$store.getters.getAllCategories.length === 0){
+  created() {
+    if (this.$store.getters.getAllCategories.length === 0) {
       this.getAllCategories();
-    }else {
+    } else {
       this.isComponentVisible = true;
       this.categories = this.$store.getters.getAllCategories;
     }
-  }
+  },
 };
 </script>
 

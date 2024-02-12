@@ -44,7 +44,7 @@ export default {
   created() {
     // Eğer products boşsa bir kontrol yapılabilir
     this.getAllProducts();
-  },
+  }
 };
 </script>
 

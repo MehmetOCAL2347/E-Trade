@@ -1,11 +1,11 @@
 package com.backend.ecommerce.Product.business.responses;
 
 import com.backend.ecommerce.Product.entities.entity.PriceType;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class ProductMainPageResponse {
 
     private String code;

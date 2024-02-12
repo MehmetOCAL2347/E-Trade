@@ -17,6 +17,11 @@ const routes = [
     component: () =>
       import("@/components/pages/Products/ProductDetailPage.vue"),
   },
+  {
+    path: "/products/query",
+    name: "filteredProducts",
+    component: () => import("@/components/pages/Products/ProductsPage.vue")
+  },
 ];
 
 const router = createRouter({

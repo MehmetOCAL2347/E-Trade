@@ -103,12 +103,8 @@ public class ProductManager implements ProductService {
     @Override
     public Flux<ProductMainPageResponse> getProductsWithParams(ProductFilterRequest filter) {
         return Flux.fromIterable(allProducts.stream()
-                .filter(product -> (filter.getCategoryName() == null || product.getCategoryName().equals(filter.getCategoryName()))
-                && (filter.getIsActive() == null || product.getIsActive().equals(filter.getIsActive())))
+                .filter(product -> (filter.getCategoryName() == null || filter.getCategoryName().isEmpty() || filter.getCategoryName().contains(product.getCategoryName())))
+                .filter(product -> (filter.getIsActive() == null || product.getIsActive().equals(filter.getIsActive())))
                 .collect(Collectors.toList()));
-
-        /*.filter(product -> (filter.getCategory() == null || product.getCategory().equals(filter.getCategory()))
-                && (filter.getPrice() == null || product.getPrice() <= filter.getPrice()))
-                .collect(Collectors.toList());*/
     }
 }
