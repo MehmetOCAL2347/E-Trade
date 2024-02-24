@@ -18,17 +18,17 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping()
+    /*@GetMapping()
     public Flux<ProductMainPageResponse> getAllProducts() {
         return productService.getAllProducts();
-    }
+    }*/
 
     @GetMapping("/pd/{code}")
     public Mono<ProductDetailPageResponse> getProductDetail(@PathVariable("code") String code) {
         return productService.getProductDetail(code);
     }
 
-    @GetMapping("/query")
+    @GetMapping()
     public Flux<ProductMainPageResponse> getProductsWithParams(@ModelAttribute ProductFilterRequest filter) {
         return productService.getProductsWithParams(filter);
     }

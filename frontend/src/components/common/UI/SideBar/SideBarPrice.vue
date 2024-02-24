@@ -1,121 +1,97 @@
 <template>
   <div>
     <h3>Fiyat</h3>
-    <span class="clear-filter hover-effect clear-button" @click="clearFilter()">Temizle</span>
-    <div class="form-check">
+    <span class="clear-filter hover-effect clear-button" @click="clearFilter()"
+      >Temizle</span
+    >
+    <div v-for="(filter, index) in filterArray" :key="index" class="form-check">
       <input
         class="form-check-input"
         type="radio"
-        name="exampleRadios"
-        id="option1"
-        value="option1"
+        :name="filter.id"
+        :id="filter.id"
+        :value="filter.value"
         v-model="selectedItem"
       />
-      <label class="form-check-label hover-effect" for="option1"> $25 altında </label>
+      <label class="form-check-label hover-effect" :for="filter.id">
+        {{ filter.description }}
+      </label>
     </div>
-
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="exampleRadios"
-        id="option2"
-        value="option2"
-        v-model="selectedItem"
-      />
-      <label class="form-check-label hover-effect" for="option2"> $25 to $50 </label>
-    </div>
-
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="exampleRadios"
-        id="option3"
-        value="option3"
-        v-model="selectedItem"
-      />
-      <label class="form-check-label hover-effect" for="option3"> $50 to $100 </label>
-    </div>
-
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="exampleRadios"
-        id="option4"
-        value="option4"
-        v-model="selectedItem"
-      />
-      <label class="form-check-label hover-effect" for="option4"> $100 to $200 </label>
-    </div>
-
-    <div class="form-check">
-      <input
-        class="form-check-input"
-        type="radio"
-        name="exampleRadios"
-        id="option5"
-        value="option5"
-        v-model="selectedItem"
-      />
-      <label class="form-check-label hover-effect" for="option5"> $200 ve Üzeri </label>
-    </div>
-
-    <form class="d-flex">
-      <div class="form-group">
-        <input
-          type="number"
-          id="minPrice"
-          name="minPrice"
-          class="form-control"
-          placeholder="$ Min"
-          v-model="minValue"
-        />
-      </div>
-      <div class="form-group">
-        <input
-          type="number"
-          id="maxPrice"
-          name="maxPrice"
-          class="form-control"
-          placeholder="$ Maks"
-          v-model="maxValue"
-        />
-      </div>
-
-      <button type="submit" class="btn btn-primary">Filtrele</button>
-    </form>
   </div>
 </template>
 
 <script>
 export default {
-  data(){
+  data() {
     return {
-      minValue: null,
-      maxValue: null,
-      selectedItem: null
-    }
+      selectedItem: {
+        minPriceValue: undefined,
+        maxPriceValue: undefined,
+      },
+      filterArray: [
+        {
+          id: "filter-1",
+          description: "$25 ve altı",
+          value: {
+            minPriceValue: undefined,
+            maxPriceValue: 25,
+          },
+        },
+        {
+          id: "filter-2",
+          description: "$25 - $50",
+          value: {
+            minPriceValue: 25,
+            maxPriceValue: 50,
+          },
+        },
+        {
+          id: "filter-3",
+          description: "$50 - $100",
+          value: {
+            minPriceValue: 50,
+            maxPriceValue: 100,
+          },
+        },
+        {
+          id: "filter-4",
+          description: "$100 - $200",
+          value: {
+            minPriceValue: 100,
+            maxPriceValue: 200,
+          },
+        },
+        {
+          id: "filter-5",
+          description: "$200 ve üzeri",
+          value: {
+            minPriceValue: 200,
+            maxPriceValue: undefined,
+          },
+        },
+      ],
+    };
   },
   watch: {
-    selectedItem(){
-      console.log(this.selectedItem);
+    selectedItem() {
+      const queryParams = {
+        minPriceValue: this.selectedItem.minPriceValue,
+        maxPriceValue: this.selectedItem.maxPriceValue,
+      };
+      this.$router.push({
+        name: "all-products",
+        query: { ...this.$route.query, ...queryParams },
+      });
     },
-    minValue(){
-      console.log(this.minValue);
-    },
-    maxValue(){
-      console.log(this.maxValue);
-    }
   },
   methods: {
-    clearFilter(){
-      this.selectedItem = null;
-      this.minValue = null;
-      this.maxValue = null;
-    }
-  }
+    clearFilter() {
+      this.selectedItem = {
+        minPriceValue: undefined,
+        maxPriceValue: undefined,
+      };
+    },
+  },
 };
 </script>
 

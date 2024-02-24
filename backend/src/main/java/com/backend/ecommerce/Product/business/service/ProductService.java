@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 public interface ProductService {
 
-    Flux<ProductMainPageResponse> getAllProducts();
+    /*Flux<ProductMainPageResponse> getAllProducts();*/
     Mono<ProductDetailPageResponse> getProductDetail(String code);
     Flux<ProductMainPageResponse> getProductsWithParams(ProductFilterRequest productFilterRequest);
 

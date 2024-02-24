@@ -10,5 +10,8 @@ export default {
   },
   async getDetailProduct(code){
     return await axios.get(BASE_URL + productUrl + detailProductUrl + code)
+  },
+  async getProductsWithParams(params){
+    return await axios.get(BASE_URL + productUrl + params)
   }
 };

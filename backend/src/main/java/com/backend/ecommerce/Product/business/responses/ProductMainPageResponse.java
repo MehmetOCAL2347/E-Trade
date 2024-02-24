@@ -12,7 +12,7 @@ public class ProductMainPageResponse {
     private String name;
     private int count;
     private Boolean isActive;
-    private double starPoint;
+    private Double starPoint;
     private double price;
     private PriceType priceType;
     private String url;

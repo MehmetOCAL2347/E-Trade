@@ -10,22 +10,18 @@
       v-for="(category, index) in categories"
       :key="index"
     >
-      <input
-        class="form-check-input"
-        type="checkbox"
-        :id="category.code"
-        :value="category.code"
-        v-model="selectedCheckboxes"
-      />
-      <label
-        class="form-check-label hover-effect"
-        :for="category.code"
-        @click="addFilter(category.name)"
-        >{{ category.name }}</label
-      >
-      <!-- <label class="form-check-label hover-effect" :for="category.code">{{
-        category.name
-      }}</label> -->
+      <div>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          :id="category.code"
+          :value="category.name"
+          v-model="filters"
+        />
+        <label class="form-check-label hover-effect" :for="category.code">{{
+          category.name
+        }}</label>
+      </div>
     </div>
   </div>
 </template>
@@ -34,20 +30,37 @@
 export default {
   data() {
     return {
-      selectedCheckboxes: [],
-      categories: [],
+      filters: [],
+      categories: [], // Ekrandaki DB'den gelen bilgi
       isComponentVisible: false,
     };
   },
+
   watch: {
-    selectedCheckboxes() {
-      console.log(this.selectedCheckboxes);
+    filters() {
+      const queryParams = { categoryName: this.filters };
+      this.$router.push({
+        name: "all-products",
+        query: { ...this.$route.query, ...queryParams },
+      });
     },
   },
+
   methods: {
     clearFilter() {
-      if (this.selectedCheckboxes.length !== 0) {
-        this.selectedCheckboxes = [];
+      if (this.filters.length !== 0) {
+        this.filters = [];
+      }
+    },
+    checkParamsExist() {
+      let query = this.$route.query.categoryName;
+
+      if (query) {
+        if (Array.isArray(query)) {
+          this.filters = query;
+        } else {
+          this.filters.push(query);          
+        }
       }
     },
 
@@ -58,18 +71,17 @@ export default {
         this.isComponentVisible = true;
       }
     },
-
-    addFilter(categoryName) {
-      this.$router.push({ path: "/products/query", query: { categoryName } });
-    },
   },
-  created() {
+  mounted() {
     if (this.$store.getters.getAllCategories.length === 0) {
       this.getAllCategories();
     } else {
       this.isComponentVisible = true;
       this.categories = this.$store.getters.getAllCategories;
     }
+  },
+  created() {
+    this.checkParamsExist();
   },
 };
 </script>

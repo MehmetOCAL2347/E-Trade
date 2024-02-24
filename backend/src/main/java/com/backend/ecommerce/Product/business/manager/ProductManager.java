@@ -6,6 +6,8 @@ import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,12 +22,8 @@ public class ProductManager implements ProductService {
 
     private List<ProductMainPageResponse> allProducts = new ArrayList<>();
 
-    @Override
-    public Flux<ProductMainPageResponse> getAllProducts() {
-        /*
-            Business kuralları konacak
-        */
-
+    @EventListener(ApplicationReadyEvent.class)
+    public void createDemoData() {
         allProducts.clear();
 
         for (int i = 0; i < 10; i++) {
@@ -70,7 +68,19 @@ public class ProductManager implements ProductService {
                     .build());
         }
 
-        return Flux.fromIterable(allProducts);
+        for (int i = 0; i < 4; i++) {
+            allProducts.add(ProductMainPageResponse.builder()
+                    .code("PRD004")
+                    .name("12 in 1 food chopper, Veggie Chopper With Container, Time-Saving Meal Prep, 8 Blades food chopper with Container - Chopper Vegetable Cutter For Salad and Food")
+                    .count(3)
+                    .isActive(false)
+                    .starPoint(1.2)
+                    .price(17.99)
+                    .priceType(PriceType.USD)
+                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/71QVldTj0jL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .categoryName("Kategori - 2")
+                    .build());
+        }
     }
 
     @Override
@@ -105,6 +115,9 @@ public class ProductManager implements ProductService {
         return Flux.fromIterable(allProducts.stream()
                 .filter(product -> (filter.getCategoryName() == null || filter.getCategoryName().isEmpty() || filter.getCategoryName().contains(product.getCategoryName())))
                 .filter(product -> (filter.getIsActive() == null || product.getIsActive().equals(filter.getIsActive())))
+                .filter(product -> (filter.getStarPoint() == null || product.getStarPoint() >= filter.getStarPoint()))
+                .filter(product -> (filter.getMinPriceValue() == null || product.getPrice() >= filter.getMinPriceValue())) // Add min price filter
+                .filter(product -> (filter.getMaxPriceValue() == null || product.getPrice() <= filter.getMaxPriceValue())) // Add max price filter
                 .collect(Collectors.toList()));
     }
 }

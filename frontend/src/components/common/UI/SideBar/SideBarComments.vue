@@ -12,7 +12,7 @@
         type="radio"
         name="exampleRadios"
         id="four-star-up"
-        value="four-star-up"
+        value="4"
         v-model="selectedItem"
       />
       <label class="form-check-label hover-effect" for="four-star-up">
@@ -26,7 +26,7 @@
         type="radio"
         name="exampleRadios"
         id="three-star-up"
-        value="three-star-up"
+        value="3"
         v-model="selectedItem"
       />
       <label class="form-check-label hover-effect" for="three-star-up">
@@ -40,7 +40,7 @@
         type="radio"
         name="exampleRadios"
         id="two-star-up"
-        value="two-star-up"
+        value="2"
         v-model="selectedItem"
       />
       <label class="form-check-label hover-effect" for="two-star-up">
@@ -54,7 +54,7 @@
         type="radio"
         name="exampleRadios"
         id="one-star-up"
-        value="one-star-up"
+        value="1"
         v-model="selectedItem"
       />
       <label class="form-check-label hover-effect" for="one-star-up">
@@ -68,19 +68,31 @@
 export default {
   data() {
     return {
-      selectedItem: null,
+      selectedItem: "",
     };
   },
   watch: {
     selectedItem() {
-      // SelectedItem'da bir değişiklik olduğu zaman aksiyon alınabilir
-      //console.log(this.selectedItem);
+      const queryParams = { starPoint: this.selectedItem };
+      this.$router.push({
+        name: "all-products",
+        query: { ...this.$route.query, ...queryParams },
+      });
     },
   },
   methods: {
     clearFilter() {
-      this.selectedItem = null;
+      this.selectedItem = undefined; // "" -> bu şekilde yaptığımızda url'de ?starPoint= şeklinde kalıyor. O sebeple undefined tanımlanmalı
     },
+    checkParamsExist() {
+      let query = this.$route.query.starPoint;
+      if (query) {
+        this.selectedItem = query;
+      }
+    },
+  },
+  created() {
+    this.checkParamsExist();
   },
 };
 </script>
