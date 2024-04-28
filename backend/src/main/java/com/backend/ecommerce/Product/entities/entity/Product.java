@@ -2,10 +2,11 @@ package com.backend.ecommerce.Product.entities.entity;
 
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-//@Document(collection = "product")
+@Document(collection = "products")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,8 +24,8 @@ public class Product {
     private Double starPoint;
     private double price;
     private PriceType priceType;
-    private List<String> bulletPoints;
-    private List<String> comments;
-    private List<Image> images;
+    private String bulletPointId;
+    private String commentsId;
+    private String imagesId;
 
 }

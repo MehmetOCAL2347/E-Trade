@@ -1,24 +1,99 @@
 package com.backend.ecommerce.Product.business.manager;
 
 import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
+import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
+import com.backend.ecommerce.Product.business.responses.ProductPriceResponse;
+import com.backend.ecommerce.Product.business.service.BulletPointsService;
+import com.backend.ecommerce.Product.business.service.CommentsService;
+import com.backend.ecommerce.Product.business.service.ImageListService;
 import com.backend.ecommerce.Product.business.service.ProductService;
+import com.backend.ecommerce.Product.dataAccess.mongo.ProductRepositoryMongo;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
+import com.backend.ecommerce.Product.entities.entity.Product;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductManager implements ProductService {
+
+    @Autowired
+    private ProductRepositoryMongo productRepositoryMongo;
+
+    @Autowired
+    private BulletPointsService bulletPointsService;
+
+    @Autowired
+    private CommentsService commentsService;
+
+    @Autowired
+    private ImageListService imageListService;
+
+    @Override
+    public ResponseEntity<String> saveNewProduct(ProductSaveRequest productSaveRequest) {
+
+        String bulletPointId = bulletPointsService
+                .saveBulletPoints(
+                        productSaveRequest.getBulletPoints(),
+                        productSaveRequest.getCode()
+                );
+
+        String commentsId = commentsService
+                .saveComments(
+                        new ArrayList<>(),
+                        productSaveRequest.getCode()
+                );
+
+        String imagesId = imageListService
+                .saveImage(
+                  productSaveRequest.getImages(),
+                  productSaveRequest.getCode()
+                );
+
+        Product product = new Product(
+                productSaveRequest.getId(),
+                productSaveRequest.getName(),
+                productSaveRequest.getSellerId(),
+                productSaveRequest.getCategoryId(),
+                productSaveRequest.getCode(),
+                productSaveRequest.getCount(),
+                productSaveRequest.getIsActive(),
+                productSaveRequest.getStarPoint(),
+                productSaveRequest.getPrice(),
+                productSaveRequest.getPriceType(),
+                bulletPointId,
+                commentsId,
+                imagesId
+        );
+        productRepositoryMongo.save(product);
+
+        return ResponseEntity.ok("Product Saved Succesfully");
+
+    }
+
+    @Override
+    public Mono<Product> getProductWithIdDummy(String id) {
+        return Mono.just(productRepositoryMongo.findById(id));
+    }
+
+    @Override
+    public Optional<ProductPriceResponse> getProductPriceById(String id) {
+
+        return Optional.empty();
+    }
 
     private List<ProductMainPageResponse> allProducts = new ArrayList<>();
 

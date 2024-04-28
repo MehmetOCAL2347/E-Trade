@@ -1,6 +1,7 @@
 package com.backend.ecommerce.User.entities.entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,13 @@ public class ApplicationUser implements UserDetails {
     @Column(unique=true)
     private String username;
     private String password;
+
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_cart_id")
+    private Integer cartId;*/
+
+    @DBRef
+    private Integer cartId;
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(

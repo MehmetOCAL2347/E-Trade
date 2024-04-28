@@ -53,9 +53,10 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll();
-                    auth.requestMatchers("/products/**").permitAll(); // TODO
+                    auth.requestMatchers("/products/**").permitAll(); // TODO - 2 permitall demek hatalı
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER");
+                    auth.requestMatchers("/cart/**").hasAnyRole("ADMIN", "USER");
                     auth.requestMatchers("/categories/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 });
