@@ -15,7 +15,7 @@ public class ProductSaveRequest {
     private String id;
     private String name;
     private String sellerId;
-    private String categoryId;
+    private String categoryName;
     private String code;
     private int count;
     private Boolean isActive;

@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryResponse {
+public class AllCategoriesResponse {
 
     private String name;
-    private String code;
 
 }

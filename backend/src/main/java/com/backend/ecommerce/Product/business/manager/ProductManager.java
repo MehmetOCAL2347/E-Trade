@@ -1,14 +1,12 @@
 package com.backend.ecommerce.Product.business.manager;
 
+import com.backend.ecommerce.Category.business.service.CategoryService;
 import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductPriceResponse;
-import com.backend.ecommerce.Product.business.service.BulletPointsService;
-import com.backend.ecommerce.Product.business.service.CommentsService;
-import com.backend.ecommerce.Product.business.service.ImageListService;
-import com.backend.ecommerce.Product.business.service.ProductService;
+import com.backend.ecommerce.Product.business.service.*;
 import com.backend.ecommerce.Product.dataAccess.mongo.ProductRepositoryMongo;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
 import com.backend.ecommerce.Product.entities.entity.Product;
@@ -42,6 +40,9 @@ public class ProductManager implements ProductService {
     @Autowired
     private ImageListService imageListService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     public ResponseEntity<String> saveNewProduct(ProductSaveRequest productSaveRequest) {
 
@@ -63,11 +64,15 @@ public class ProductManager implements ProductService {
                   productSaveRequest.getCode()
                 );
 
+
+        String categoryId = categoryService.getCategoryId(productSaveRequest.getCategoryName());
+
+
         Product product = new Product(
                 productSaveRequest.getId(),
                 productSaveRequest.getName(),
                 productSaveRequest.getSellerId(),
-                productSaveRequest.getCategoryId(),
+                categoryId,
                 productSaveRequest.getCode(),
                 productSaveRequest.getCount(),
                 productSaveRequest.getIsActive(),
