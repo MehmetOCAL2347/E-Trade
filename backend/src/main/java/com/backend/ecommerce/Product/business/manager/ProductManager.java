@@ -95,9 +95,12 @@ public class ProductManager implements ProductService {
     }
 
     @Override
-    public Optional<ProductPriceResponse> getProductPriceById(String id) {
-
-        return Optional.empty();
+    public Double calculateTotalPriceForCart(List<String> productIds) {
+        double totalPrice = 0.0;
+        for (String productId : productIds) {
+            totalPrice+= productRepositoryMongo.findById(productId).getPrice();
+        }
+        return totalPrice;
     }
 
     private List<ProductMainPageResponse> allProducts = new ArrayList<>();

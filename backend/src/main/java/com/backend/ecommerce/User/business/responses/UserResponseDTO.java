@@ -1,12 +1,12 @@
-package com.backend.ecommerce.Cart.business.requests;
+package com.backend.ecommerce.User.business.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class CartItemDto {
-    private Integer cartItemId;
+public class UserResponseDTO {
+    private String jwt;
 }

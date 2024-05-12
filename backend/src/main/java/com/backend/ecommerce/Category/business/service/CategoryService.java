@@ -13,6 +13,7 @@ public interface CategoryService {
     Flux<AllCategoriesResponse> getAllCategories();
     ResponseEntity addNewCategory(CategorySaveRequest categorySaveRequest);
     String getCategoryId(String categoryName);
+    Boolean isCategoryExist(String categoryName);
     //void getAllCategories();
     /*String addNewCategory(CategorySaveRequest categorySaveRequest);
     Mono<Category> findCategoryId(String categoryName);*/

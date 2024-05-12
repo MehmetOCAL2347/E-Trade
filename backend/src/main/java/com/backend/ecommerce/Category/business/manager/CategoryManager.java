@@ -55,4 +55,14 @@ public class CategoryManager implements CategoryService {
             return "";
         }
     }
+
+    @Override
+    public Boolean isCategoryExist(String categoryName) {
+        Category category = categoryMongoRepository.findByName(categoryName).block();
+        if (category !=null) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
