@@ -11,5 +11,7 @@ public interface AuthServices {
 
     ResponseEntity<UserResponseDTO> registerUser(UserRequestDTO registrationDto);
     ResponseEntity<UserResponseDTO> loginUser(String username, String password);
+    ResponseEntity<UserResponseDTO> deleteUser(String token);
+    ResponseEntity<UserResponseDTO> logout(String token);
     ResponseEntity<String> addProductToCart(String token, AddToCartRequest addToCartRequest) throws ParseException;
 }

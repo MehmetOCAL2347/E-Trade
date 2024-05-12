@@ -37,6 +37,11 @@ public class CartManager implements CartService {
         return ResponseEntity.ok("Cart Updated");
     }
 
+    @Override
+    public void deletById(String cartId) {
+        cartRepository.deleteById(cartId);
+    }
+
     /*@Override
     public Cart getCart(Integer id) {
         return cartRepository.findByCartId(id);

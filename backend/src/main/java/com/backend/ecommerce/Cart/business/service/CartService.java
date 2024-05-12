@@ -11,4 +11,5 @@ public interface CartService {
     String getCartId(Cart cart);
     Optional<Cart> getCart(String cartId);
     ResponseEntity<String> updateCart(Cart cart);
+    void deletById(String cartId);
 }

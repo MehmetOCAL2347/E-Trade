@@ -15,7 +15,6 @@ public class UserController {
     @Autowired
     private AuthServices authenticationServices;
 
-    // TODO-5 UserDTO oluşturulmalı
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO body){
         return authenticationServices.registerUser(body);
@@ -24,6 +23,16 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO body){
         return authenticationServices.loginUser(body.getUsername(), body.getPassword());
+    }
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<UserResponseDTO> deleteUser(@RequestHeader(name = "Authorization") String token){
+        return authenticationServices.deleteUser(token);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<UserResponseDTO> logout(@RequestHeader(name = "Authorization") String token){
+        return authenticationServices.logout(token);
     }
 
 }

@@ -96,15 +96,55 @@ public class AuthManager implements AuthServices {
     }
 
     @Override
+    public ResponseEntity<UserResponseDTO> deleteUser(String token) {
+
+        String userId;
+        String cartId;
+        String splittedToken = tokenService.getToken(token);
+
+        try {
+            if (!tokenService.isUserExpire(splittedToken)) {
+                userId = tokenService.getUserIdFromJwt(splittedToken);
+                cartId = userRepository.findById(userId).get().getCartId();
+
+                userRepository.deleteById(userId);
+                cartService.deletById(cartId);
+                return ResponseEntity.ok(new UserResponseDTO());
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponseDTO());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserResponseDTO());
+        }
+    }
+
+    @Override
+    public ResponseEntity<UserResponseDTO> logout(String token) {
+
+        String splittedToken = tokenService.getToken(token);
+        try {
+            if(!tokenService.isUserExpire(splittedToken)){
+                return ResponseEntity.ok(new UserResponseDTO());
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
+        }
+    }
+
+    @Override
     public ResponseEntity<String> addProductToCart(String token, AddToCartRequest addToCartRequest) throws ParseException {
 
         String userId;
+        String cartId;
+        Cart cart;
         String splittedToken = tokenService.getToken(token);
 
         if (!tokenService.isUserExpire(splittedToken)) {
             userId = tokenService.getUserIdFromJwt(splittedToken);
-            String cartId = userRepository.findById(userId).get().getCartId();
-            Cart cart = cartService.getCart(cartId).get();
+            cartId = userRepository.findById(userId).get().getCartId();
+            cart = cartService.getCart(cartId).get();
 
             // update methodu ile de yapılabilir mi? service DB'ye eriştiğinde findAndUpdate() gibi bir method olabilir mongoda
             cart.setProductIds(addToCartRequest.getProductIds());
