@@ -18,14 +18,19 @@ const routes = [
             component: () =>
               import("@/components/pages/Products/AllProducts.vue"),
           },
-          // {
-          //   path: "query",
-          //   name: "filtered-products",
-          //   props: true,
-          //   component: () =>
-          //     import("@/components/pages/Products/AllProducts.vue"),
-          // },
         ],
+      },
+      {
+        path: "login",
+        name: "login",
+        component: () => import("@/components/pages/Users/UserLogin.vue"),
+        meta: { hideNavbar: true },
+      },
+      {
+        path: "register",
+        name: "register",
+        component: () => import("@/components/pages/Users/UserRegister.vue"),
+        meta: { hideNavbar: true },
       },
     ],
   },

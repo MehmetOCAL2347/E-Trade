@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <the-header />
+    <the-header v-if="!$route.meta.hideNavbar"/>
     <the-main />
-    <the-footer />
+    <the-footer v-if="!$route.meta.hideNavbar"/>
   </div>
 </template>
 

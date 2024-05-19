@@ -15,3 +15,8 @@ a{
     text-decoration: none;
     color: black;
 }
+
+.background-one{
+  background-color: var(--background-one);
+  height: calc(97vh - var(--navbar-height));
+}

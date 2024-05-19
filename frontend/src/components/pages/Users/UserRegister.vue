@@ -1,13 +1,11 @@
 <template>
   <div>
-    <!-- Bileşen içeriği buraya gelecek -->
+    UserRegister
   </div>
 </template>
 
 <script>
-export default {
-    
-};
+export default {};
 </script>
 
 <style scoped></style>
