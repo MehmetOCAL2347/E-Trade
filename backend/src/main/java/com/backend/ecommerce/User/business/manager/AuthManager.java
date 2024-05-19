@@ -3,8 +3,10 @@ package com.backend.ecommerce.User.business.manager;
 import com.backend.ecommerce.Cart.business.requests.AddToCartRequest;
 import com.backend.ecommerce.Cart.business.service.CartService;
 import com.backend.ecommerce.Cart.entities.entity.Cart;
+import com.backend.ecommerce.Mail.Mail;
 import com.backend.ecommerce.Product.business.service.ProductService;
-import com.backend.ecommerce.User.business.requests.UserRequestDTO;
+import com.backend.ecommerce.User.business.requests.UserLoginRequestDTO;
+import com.backend.ecommerce.User.business.requests.UserRegisterRequestDTO;
 import com.backend.ecommerce.User.business.responses.UserResponseDTO;
 import com.backend.ecommerce.User.business.service.AuthServices;
 import com.backend.ecommerce.User.business.service.TokenService;
@@ -46,9 +48,11 @@ public class AuthManager implements AuthServices {
     private CartService cartService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private Mail mail;
 
     @Override
-    public ResponseEntity<UserResponseDTO> registerUser(UserRequestDTO registrationDto) {
+    public ResponseEntity<UserResponseDTO> registerUser(UserRegisterRequestDTO registrationDto) {
         // TODO- Eğer kullanıcı adı daha önce varsa o zaman kontrol yapmalıyız
         String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
         Roles userRole = roleRepository.findByAuthority("USER").get();
@@ -61,34 +65,36 @@ public class AuthManager implements AuthServices {
 
         User savedUser = userRepository.save(
                 User.builder()
-                        .username(registrationDto.getUsername())
+                        .email(registrationDto.getEmail())
+                        .username(registrationDto.getEmail()) // Username == userMail
                         .password(encodedPassword)
                         .cartId(cartService.getCartId(new Cart()))
                         .authorities(authorities)
+                        .resetToken("")
                         .build()
         );
 
         if (savedUser != null) {
             String token = tokenService.generateJwt(savedUser);
             return ResponseEntity.ok(new UserResponseDTO(token));
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserResponseDTO());
         }
     }
 
     @Override
-    public ResponseEntity<UserResponseDTO> loginUser(String username, String password) {
+    public ResponseEntity<UserResponseDTO> loginUser(UserLoginRequestDTO loginDTO) {
 
-        String token;
+        String jwt;
 
         try {
             Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+                    new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
             );
 
-            token = tokenService.generateJwt(auth);
+            jwt = tokenService.generateJwt(auth);
 
-            return ResponseEntity.ok(new UserResponseDTO(token));
+            return ResponseEntity.ok(new UserResponseDTO(jwt));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserResponseDTO());
@@ -114,7 +120,7 @@ public class AuthManager implements AuthServices {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
         } catch (ParseException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponseDTO());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserResponseDTO());
         }
     }
@@ -124,12 +130,68 @@ public class AuthManager implements AuthServices {
 
         String splittedToken = tokenService.getToken(token);
         try {
-            if(!tokenService.isUserExpire(splittedToken)){
+            if (!tokenService.isUserExpire(splittedToken)) {
                 return ResponseEntity.ok(new UserResponseDTO());
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> forgotPassword(String email) {
+        String defaultToken;
+        String resetLink = "http://localhost:8080/reset-password?token=";
+
+        try {
+            User user = userRepository.findByEmail(email).get();
+            defaultToken = tokenService.resetPasswordToken(user);
+
+            if (user != null) {
+                resetLink += defaultToken;
+                user.setResetToken(defaultToken);
+                userRepository.save(user);
+                mail.sendEmail("ocalmehmet.2347@gmail.com", "Reset Password", resetLink);
+                return ResponseEntity.ok("Şifre sıfırlama için mail adresinizi kontrol ediniz");
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Bulunamadı");
+    }
+
+    @Override
+    public ResponseEntity<?> resetPassword(String token, String newPassword) {
+
+        String encodedPassword;
+        String userResetToken;
+        String userId;
+        User user;
+
+        try {
+            if(!tokenService.isUserExpire(token)){
+
+                userId = tokenService.getUserIdFromJwt(token);
+                user = userRepository.findById(userId).get();
+                userResetToken = user.getResetToken();
+
+                if (userResetToken.equals(token)){
+                    encodedPassword = passwordEncoder.encode(newPassword);
+                    user.setPassword(encodedPassword);
+                    user.setResetToken("");
+                    userRepository.save(user);
+                    return ResponseEntity.ok("Şifre Başarılı Şekilde Güncellendi");
+                }
+                else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tokenler uyuşmadı");
+                }
+
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expire oldu");
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 

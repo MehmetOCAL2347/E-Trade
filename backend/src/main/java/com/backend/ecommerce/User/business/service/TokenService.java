@@ -13,6 +13,7 @@ import java.util.Date;
 public interface TokenService {
     String generateJwt(Authentication auth) throws KeyLengthException;
     String generateJwt(User user);
+    String resetPasswordToken(User user);
     String getUserIdFromJwt(String jwt) throws ParseException;
     boolean isUserExpire(String jwt) throws ParseException;
     String getToken(String token);

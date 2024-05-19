@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.Set;
 
@@ -13,7 +15,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of="id")
+@EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
     private String id;
@@ -21,13 +23,18 @@ public class User implements UserDetails {
     private String password;
     private String cartId;
     private Set<Roles> authorities; // List olmaz mı?
+    private String email;
+    private String resetToken;
+
+    // email ve resetToken eklencek
 
     // Lombok ile yapılamaz mı?
-    public User(String username, String password, String cartId, Set<Roles> authorities) {
+    public User(String username, String password, String cartId, Set<Roles> authorities, String email) {
         this.username = username;
         this.password = password;
         this.cartId = cartId;
         this.authorities = authorities;
+        this.email = email;
     }
 
     @Override

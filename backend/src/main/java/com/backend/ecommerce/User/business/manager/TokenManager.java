@@ -32,6 +32,7 @@ public class TokenManager implements TokenService {
     private JwtDecoder jwtDecoder;
 
     private final long EXPIRATION_TIME = 60000; // 20 sn, 1 second = 1000 milliseconds
+    private final long RESET_PASSWORD_TIME = 1200000; // 20 dk
 
     @Override
     public String generateJwt(Authentication auth) throws KeyLengthException {
@@ -55,9 +56,10 @@ public class TokenManager implements TokenService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(expiration)
-                .subject(auth.getName())
+                .subject(user.getUsername())
                 .claim("id", userId)
                 .claim("roles", scope)
+                .claim("email", user.getEmail())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -68,6 +70,7 @@ public class TokenManager implements TokenService {
 
         String userId = user.getId();
         String userName = user.getUsername();
+        String userEmail = user.getEmail();
         JwtClaimsSet claims;
 
         String scope = user.getAuthorities().stream()
@@ -84,6 +87,25 @@ public class TokenManager implements TokenService {
                 .subject(userName)
                 .claim("id", userId)
                 .claim("roles", scope)
+                .claim("email", userEmail)
+                .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    @Override
+    public String resetPasswordToken(User user) {
+
+        String userId = user.getId();
+        JwtClaimsSet claims;
+
+        Instant now = Instant.now();
+        Instant expiration = now.plus(RESET_PASSWORD_TIME, ChronoUnit.MILLIS);
+
+        claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(expiration)
+                .claim("id", userId)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -100,9 +122,9 @@ public class TokenManager implements TokenService {
         JWTClaimsSet claims = getClaimSetFromJwt(jwt);
         Date expirationDate = claims.getExpirationTime();
         Date now = Date.from(Instant.now());
-        if(now.before(expirationDate)){ // Expire olmadı
+        if (now.before(expirationDate)) { // Expire olmadı
             return false;
-        }else { // Expire oldu
+        } else { // Expire oldu
             return true;
         }
     }
@@ -112,7 +134,7 @@ public class TokenManager implements TokenService {
         String[] parts = token.split(" ");
         String splittedToken = "";
 
-        if(parts.length == 2 && parts[0].equalsIgnoreCase("Bearer")){
+        if (parts.length == 2 && parts[0].equalsIgnoreCase("Bearer")) {
             splittedToken = parts[1];
         }
         return splittedToken;

@@ -54,11 +54,13 @@ public class UserDemoData {
 
         userRepositoryMongo.save(
                 User.builder()
-                .username(DEFAULT_USER_NAME)
-                .password(passwordEncoder.encode(DEFAULT_USER_PASSWORD))
-                .cartId(cartService.getCartId(new Cart()))
-                .authorities(roles)
-                .build()
+                        .username(DEFAULT_USER_NAME)
+                        .password(passwordEncoder.encode(DEFAULT_USER_PASSWORD))
+                        .cartId(cartService.getCartId(new Cart()))
+                        .authorities(roles)
+                        .email("ocal.mehmet@outlook.com.tr")
+                        .resetToken("")
+                        .build()
         );
     }
 
