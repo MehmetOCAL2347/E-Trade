@@ -5,6 +5,7 @@ import com.backend.ecommerce.Cart.dataAccess.mongo.CartRepositoryMongo;
 import com.backend.ecommerce.Cart.entities.entity.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

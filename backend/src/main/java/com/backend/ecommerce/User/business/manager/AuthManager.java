@@ -3,17 +3,21 @@ package com.backend.ecommerce.User.business.manager;
 import com.backend.ecommerce.Cart.business.requests.AddToCartRequest;
 import com.backend.ecommerce.Cart.business.service.CartService;
 import com.backend.ecommerce.Cart.entities.entity.Cart;
-import com.backend.ecommerce.Mail.Mail;
+import com.backend.ecommerce.Core.ErrorHandling.RuntimeExceptions.UserFailedException;
+import com.backend.ecommerce.Core.ErrorHandling.RuntimeExceptions.TokenCreationException;
+import com.backend.ecommerce.Core.Mail.Mail;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.User.business.requests.UserLoginRequestDTO;
 import com.backend.ecommerce.User.business.requests.UserRegisterRequestDTO;
 import com.backend.ecommerce.User.business.responses.UserResponseDTO;
+import com.backend.ecommerce.User.business.rules.UserRulesService;
 import com.backend.ecommerce.User.business.service.AuthServices;
 import com.backend.ecommerce.User.business.service.TokenService;
 import com.backend.ecommerce.User.dataAccess.mongo.RoleRepositoryMongo;
 import com.backend.ecommerce.User.dataAccess.mongo.UserRepositoryMongo;
 import com.backend.ecommerce.User.entities.entity.Roles;
 import com.backend.ecommerce.User.entities.entity.User;
+import com.nimbusds.jose.KeyLengthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,18 +55,19 @@ public class AuthManager implements AuthServices {
     private ProductService productService;
     @Autowired
     private Mail mail;
+    @Autowired
+    private UserRulesService userRulesService;
 
     @Override
     public ResponseEntity<UserResponseDTO> registerUser(UserRegisterRequestDTO registrationDto) {
-        // TODO- Eğer kullanıcı adı daha önce varsa o zaman kontrol yapmalıyız
         String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
         Roles userRole = roleRepository.findByAuthority("USER").get();
 
         Set<Roles> authorities = new HashSet<>();
-
         authorities.add(userRole);
-        // TODO-1 - UserId hep 0 olarak gönderilmemeli
-        //return userRepository.save(new ApplicationUser(registrationDto.getUsername(), encodedPassword,  2,authorities));
+
+        // Business Rules
+        userRulesService.isUserExist(registrationDto.getEmail());
 
         User savedUser = userRepository.save(
                 User.builder()
@@ -74,11 +80,11 @@ public class AuthManager implements AuthServices {
                         .build()
         );
 
-        if (savedUser != null) {
+        try {
             String token = tokenService.generateJwt(savedUser);
             return ResponseEntity.ok(new UserResponseDTO(token));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserResponseDTO());
+        }catch (Exception e){
+            throw new UserFailedException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "User could not been created");
         }
     }
 
@@ -96,8 +102,10 @@ public class AuthManager implements AuthServices {
 
             return ResponseEntity.ok(new UserResponseDTO(jwt));
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserResponseDTO());
+        } catch (AuthenticationException e) {
+            throw new UserFailedException(HttpStatus.UNAUTHORIZED.value(), "Invalid email or password");
+        } catch (KeyLengthException e) {
+            throw new TokenCreationException("Token could not been created correctly");
         }
     }
 

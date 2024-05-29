@@ -6,6 +6,7 @@ import com.backend.ecommerce.User.business.requests.UserLoginRequestDTO;
 import com.backend.ecommerce.User.business.requests.UserRegisterRequestDTO;
 import com.backend.ecommerce.User.business.responses.UserResponseDTO;
 import com.backend.ecommerce.User.business.service.AuthServices;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +48,4 @@ public class UserController {
     public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestBody NewPasswordDTO newPasswordDTO) {
         return authenticationServices.resetPassword(token, newPasswordDTO.getNewPassword());
     }
-
 }
