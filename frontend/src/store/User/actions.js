@@ -8,5 +8,14 @@ export default {
     } catch (error) {
       console.log("Errorr: " + error);
     }
+  },
+  
+  async register(context, params){
+    try {
+      const response = await UserService.register(params);
+      context.commit("setRegisterUser", response);
+    } catch (error) {
+      console.log("Error: " + error);
+    }
   }
 };

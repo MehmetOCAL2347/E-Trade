@@ -7,6 +7,11 @@ const routes = [
     component: () => import("@/views/MainView.vue"),
     children: [
       {
+        path: "",
+        name: "landing-page",
+        component: () => import("@/components/pages/LandingMainPage/LandingPage.vue"),
+      },
+      {
         path: "products",
         name: "products",
         component: () => import("@/components/pages/Products/ProductsPage.vue"),
@@ -30,6 +35,18 @@ const routes = [
         path: "register",
         name: "register",
         component: () => import("@/components/pages/Users/UserRegister.vue"),
+        meta: { hideNavbar: true },
+      },
+      {
+        path: "cart",
+        name: "cart",
+        component: () => import("@/components/pages/Users/UserRegister.vue"),
+        meta: { hideNavbar: false },
+      },
+      {
+        path: "forgot-password",
+        name: "forgot-password",
+        component: () => import("@/components/pages/Users/ForgotPassword.vue"),
         meta: { hideNavbar: true },
       },
     ],

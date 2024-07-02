@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main-view">
     <router-view/>
   </div>
 </template>
@@ -10,4 +10,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#main-view{
+  /* background-color: red; */
+}
+</style>

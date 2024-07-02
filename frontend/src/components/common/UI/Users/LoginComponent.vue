@@ -2,7 +2,7 @@
   <div class="login-container">
     <form @submit.prevent="login" id="login-form">
       <h3>{{ tradeName }}</h3>
-      <h2>Giriş Yap</h2>
+      <h2>{{ loginText }}</h2>
       <div class="form-group">
         <label for="email">Email</label>
         <input
@@ -31,7 +31,9 @@
           <label for="remind-me">Beni Hatırla</label>
         </div>
         <div>
-          <router-link to="forgot-password">Şifremi Unuttum</router-link>
+          <router-link to="forgot-password" class="to-forget-password"
+            >Şifremi Unuttum</router-link
+          >
         </div>
       </div>
       <button id="submit-button" class="button" type="submit">
@@ -40,15 +42,18 @@
           aria-hidden="true"
           v-if="loading"
         ></span>
-        <span role="status">{{ loginButtonText }}</span>
+        <span role="status">{{ loginText }}</span>
       </button>
+      <div class="to-register-page-container">
+        Henüz Üye Değil Misiniz?
+        <router-link to="/register" class="to-register-page"
+          >Kayıt Ol</router-link
+        >
+      </div>
     </form>
+    <div class="line-with-text">Veya</div>
     <div>
       <button id="sign-with-google" class="button">Google İle Giriş Yap</button>
-    </div>
-    <div class="line-with-text">Henüz Üye Değil Misiniz?</div>
-    <div>
-      <button id="register-button" class="button">Kayıt Ol</button>
     </div>
   </div>
 </template>
@@ -61,7 +66,7 @@ export default {
       password: "",
       loginUser: {},
       loading: false,
-      loginButtonText: "Giriş Yap",
+      loginText: "Giriş Yap",
       tokenName: "token-mande",
       error: null,
       tradeName: "mZone",
@@ -71,7 +76,7 @@ export default {
     async login() {
       this.loading = true;
       this.error = null;
-      this.loginButtonText = "Yükleniyor...";
+      this.loginText = "Yükleniyor...";
 
       try {
         await this.$store.dispatch("login", {
@@ -84,7 +89,7 @@ export default {
         if (this.loginUser.status === 200) {
           localStorage.setItem(this.tokenName, this.loginUser.data.jwt);
           this.$router.push({ name: "main" });
-        }else if(this.loginUser.status === 404){
+        } else if (this.loginUser.status === 404) {
           localStorage.setItem(this.tokenName, this.loginUser.data.jwt);
           console.log("Kullanıcı Bulunamadı");
         }
@@ -101,7 +106,7 @@ export default {
         // Uyarı mesajı verilebilir
       } finally {
         this.loading = false;
-        this.loginButtonText = "Giriş Yap";
+        this.loginText = "Giriş Yap";
       }
     },
     isTokenExist() {
@@ -213,6 +218,20 @@ export default {
 
 .line-with-text::after {
   margin-left: 10px;
+}
+
+.to-forget-password {
+  text-decoration: underline;
+  color: #874f41;
+}
+
+.to-register-page-container {
+  text-align: center;
+}
+
+.to-register-page {
+  text-decoration: underline;
+  color: #874f41;
 }
 
 label {

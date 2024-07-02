@@ -1,20 +1,20 @@
 <template>
-  <div class="background-one">
-    <card-type-one-vue></card-type-one-vue>
+  <div id="login-component">
+    <login-component></login-component>
   </div>
 </template>
 
 <script>
-import CardTypeOneVue from '@/components/common/UI/Users/CardTypeOne.vue';
+import LoginComponent from '@/components/common/UI/Users/LoginComponent.vue';
 export default {
     components: {
-      CardTypeOneVue
+      LoginComponent
     }
 };
 </script>
 
 <style scoped>
-.background-one{
+#login-component{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
