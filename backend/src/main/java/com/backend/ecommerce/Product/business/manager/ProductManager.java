@@ -5,9 +5,12 @@ import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
-import com.backend.ecommerce.Product.business.responses.ProductPriceResponse;
-import com.backend.ecommerce.Product.business.service.*;
+import com.backend.ecommerce.Product.business.service.BulletPointsService;
+import com.backend.ecommerce.Product.business.service.CommentsService;
+import com.backend.ecommerce.Product.business.service.ImageListService;
+import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.Product.dataAccess.mongo.ProductRepositoryMongo;
+import com.backend.ecommerce.Product.entities.entity.Image;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
 import com.backend.ecommerce.Product.entities.entity.Product;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,16 +111,16 @@ public class ProductManager implements ProductService {
     public void createDemoData() {
         allProducts.clear();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             allProducts.add(ProductMainPageResponse.builder()
                     .code("PRD001")
-                    .name("Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
-                    .count(25)
+                    .name("Mande El Araç Süpürgesi Kablosuz, 21000pa Yüksek Güçlü Emişli Taşınabilir Elektrikli Süpürge")
+                    .count(20)
                     .isActive(true)
                     .starPoint(4.5)
-                    .price(25.99)
-                    .priceType(PriceType.USD)
-                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/81qc9Uc5JBL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .price(23.99)
+                    .priceType(PriceType.TL)
+                    .url("https://m.media-amazon.com/images/I/71moOe5vAiL._AC_SL1500_.jpg")
                     .categoryName("Kategori - 1")
                     .build());
         }
@@ -126,13 +128,13 @@ public class ProductManager implements ProductService {
         for (int i = 0; i < 10; i++) {
             allProducts.add(ProductMainPageResponse.builder()
                     .code("PRD002")
-                    .name("Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
+                    .name("Ürün-2 Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
                     .count(15)
                     .isActive(true)
                     .starPoint(3.2)
                     .price(50.99)
-                    .priceType(PriceType.USD)
-                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/81m5GFr6aeL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .priceType(PriceType.TL)
+                    .url("https://freshcart.codescandy.com/assets/images/products/product-img-2.jpg")
                     .categoryName("Kategori - 2")
                     .build());
         }
@@ -140,13 +142,13 @@ public class ProductManager implements ProductService {
         for (int i = 0; i < 10; i++) {
             allProducts.add(ProductMainPageResponse.builder()
                     .code("PRD003")
-                    .name("VEGGURU Safer Mandoline Food Slicer, Thickness Adjustable Vegetable Chopper, Onion Chopper Potato Slicer Tomato Cutter Dicer, Multifunctional Kithcen Food Fruit Chopper(Blue)")
+                    .name("Ürün-3 VEGGURU Safer Mandoline Food Slicer, Thickness Adjustable Vegetable Chopper, Onion Chopper Potato Slicer Tomato Cutter Dicer, Multifunctional Kithcen Food Fruit Chopper(Blue)")
                     .count(55)
                     .isActive(true)
                     .starPoint(2.7)
                     .price(150.99)
-                    .priceType(PriceType.USD)
-                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/813H7+vbq6L._AC_SY300_SX300_.jpg")
+                    .priceType(PriceType.TL)
+                    .url("https://freshcart.codescandy.com/assets/images/products/product-img-3.jpg")
                     .categoryName("Kategori - 3")
                     .build());
         }
@@ -154,13 +156,13 @@ public class ProductManager implements ProductService {
         for (int i = 0; i < 4; i++) {
             allProducts.add(ProductMainPageResponse.builder()
                     .code("PRD004")
-                    .name("12 in 1 food chopper, Veggie Chopper With Container, Time-Saving Meal Prep, 8 Blades food chopper with Container - Chopper Vegetable Cutter For Salad and Food")
+                    .name("Ürün-4 12 in 1 food chopper, Veggie Chopper With Container, Time-Saving Meal Prep, 8 Blades food chopper with Container - Chopper Vegetable Cutter For Salad and Food")
                     .count(3)
                     .isActive(false)
                     .starPoint(1.2)
                     .price(17.99)
-                    .priceType(PriceType.USD)
-                    .url("https://m.media-amazon.com/images/W/MEDIAX_849526-T3/images/I/71QVldTj0jL.__AC_SX300_SY300_QL70_FMwebp_.jpg")
+                    .priceType(PriceType.TL)
+                    .url("https://freshcart.codescandy.com/assets/images/products/product-img-4.jpg")
                     .categoryName("Kategori - 2")
                     .build());
         }
@@ -170,24 +172,31 @@ public class ProductManager implements ProductService {
     public Mono<ProductDetailPageResponse> getProductDetail(String code) {
 
         List<String> list = new ArrayList<>();
-        list.add("Professional Design: Our designers dismantled dozens of kinds of vegetable chopper on the market, and more customers did research, we understand the needs of customers, Designed this all-star vegetable chopper. This vegetable chopper in the major kitchen product exhibition received orders from all over the world, now we put it to the market.");
-        list.add("Smart and Effective Design: Safety lock design, can better protect your fingers. High-quality knife holder boxes can be stored, saving more kitchen space. The simplest and most efficient shaft design is our patented, allowing for simpler and less effort disassembly while maintaining better stability. The detachable hand guard is also our highlight, making it easier and cleaner to clean. The Grid is also a snap design for easy and effortless disassembly. A variety of safety signs and instructions, so that you in the use of the process more safe.");
-        list.add("Save time and effort: Make a meal for yourself and your family after work , versatile blade design allows you to cut the perfect Onions, tomatoes and peppers to make salsa in a short time, while also handling garlic, ginger, radish, cheese and other various vegetables. Life is always about enjoyment, so owning this vegetable chopper will save your time and enjoy life better for your family");
-        list.add("Material safety: Comfortable handle using TPU material, safe and comfortable. 430J2 stainless steel blades are more durable than 304 blades and will not rust. The ABS base is designed to withstand even greater pressure and is also suitable for the upper part of the dishwasher, making cleaning easier. The non-slip silicone ring at the bottom increases friction and is suitable for dry or wet desktops. All materials are BPA-free, so you and your family can use them safely");
-        list.add("The perfect kitchen gadget collection (18 in 1) : The vegetable chopper consists of 18 accessories, 2 dicing blades and 6 cutting blades, and comes with 2 knife holder boxes for storage. Offering you a variety of ways to slice, chop, grate and chop, the high-quality stainless steel blades cut perfect Onions, tomatoes and peppers for salsa in no time. 2L containers can hold more vegetables. Safe hand guards make you safer during use, save time and protect you from injury. Save more kitchen space");
+        list.add("Yüksek hızlı fırçasız motor, 120AW / 21000Pa'lık güçlü bir emme kuvveti sağlar");
+        list.add("Mande'nin kablosuz araç elektrikli süpürgesi, emsallerimizi 15 dakika kadar aşan, 30 dakikaya varan ultra uzun menzile sahip yepyeni bir çift pil tasarımına sahiptir.");
+        list.add("Mande mini araba elektrikli süpürgesi yalnızca 2,6 pound ağırlığındadır ve elde taşınır ve kablosuz bir tasarıma sahiptir");
+        list.add("Düz nozullar ve fırçalar boşlukları ve tozu temizler. Çok yüzeyli nozullar evcil hayvan tüylerinin üstesinden gelir.");
+        list.add("Araba elektrikli süpürgemiz bir arabayı ve bir odayı 15 dakikada temizleyebilir, temizlik süresini ve sıklığını büyük ölçüde azaltır");
+
+        List<Image> images = new ArrayList<>();
+        images.add(new Image(Image.ImageType.ONE, "https://m.media-amazon.com/images/I/71moOe5vAiL._AC_SL1500_.jpg"));
+        images.add(new Image(Image.ImageType.TWO, "https://m.media-amazon.com/images/I/719cyx2DOFL._AC_SL1500_.jpg"));
+        images.add(new Image(Image.ImageType.THEREE, "https://m.media-amazon.com/images/I/61YrTQGu-XL._AC_SL1500_.jpg"));
+        images.add(new Image(Image.ImageType.FOUR, "https://m.media-amazon.com/images/I/71LfR1OqsaL._AC_SL1500_.jpg"));
 
         return Mono.just(
                 ProductDetailPageResponse
                         .builder()
                         .code(code)
-                        .name("Mueller Pro-Series All-in-One, 12 Blade Mandoline Slicer, Vegetable Spiralizer, Cutter, Dicer, Food Chopper, Grater, Kitchen Gadgets Sets with Container")
+                        .name("Mande El Araç Süpürgesi Kablosuz, 21000pa Yüksek Güçlü Emişli Taşınabilir Elektrikli Süpürge")
                         .starPoint(4.5)
                         .count(20)
                         .price(23.99)
-                        .priceType(PriceType.USD)
+                        .priceType(PriceType.TL)
                         .categoryName("Kategori - 1")
                         .sellerName("MANDE")
                         .bulletPoints(list)
+                        .images(images)
                         .build()
         );
 

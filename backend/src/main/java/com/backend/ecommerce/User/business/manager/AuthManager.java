@@ -60,14 +60,21 @@ public class AuthManager implements AuthServices {
 
     @Override
     public ResponseEntity<UserResponseDTO> registerUser(UserRegisterRequestDTO registrationDto) {
-        String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
-        Roles userRole = roleRepository.findByAuthority("USER").get();
 
-        Set<Roles> authorities = new HashSet<>();
+        String email;
+        String encodedPassword;
+        Roles userRole;
+        Set<Roles> authorities = new HashSet<>();;
+
+        encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
+        userRole = roleRepository.findByAuthority("USER").get();
+
         authorities.add(userRole);
+        email = registrationDto.getEmail();
 
         // Business Rules
-        userRulesService.isUserExist(registrationDto.getEmail());
+        userRulesService.isEmailFormatCorrect(email);
+        userRulesService.isUserExist(email);
 
         User savedUser = userRepository.save(
                 User.builder()
@@ -90,6 +97,9 @@ public class AuthManager implements AuthServices {
 
     @Override
     public ResponseEntity<UserResponseDTO> loginUser(UserLoginRequestDTO loginDTO) {
+
+        // Business Rules
+        userRulesService.isEmailFormatCorrect(loginDTO.getEmail());
 
         String jwt;
 
@@ -115,6 +125,8 @@ public class AuthManager implements AuthServices {
         String userId;
         String cartId;
         String splittedToken = tokenService.getToken(token);
+
+        // Business Rule
 
         try {
             if (!tokenService.isUserExpire(splittedToken)) {
