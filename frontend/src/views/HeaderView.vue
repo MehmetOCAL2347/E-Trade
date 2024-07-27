@@ -1,5 +1,5 @@
 <template>
-  <div id="the-header-component" class="container-fluid px-0 fixed-top">
+  <div id="the-header-component" class="container-fluid px-0">
     <header
       id="header-1"
       class="d-flex flex-wrap justify-content-start align-items-center pt-3 header"
@@ -17,7 +17,7 @@
     >
       <div class="container-box">
         <router-link
-          :to="{ name: 'main' }"
+          to="/"
           class="d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
           >{{ title }}
           <!-- TODO-1 Logo Eklencek

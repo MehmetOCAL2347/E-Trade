@@ -19,7 +19,7 @@
       <span v-if="isWarnMessageShouldBeVisible()" class="warn-message">{{
         this.stockWarnMessage()
       }}</span>
-      <router-link class="btn btn-primary w-100" to="#" v-if="product.isActive">Add to Chart</router-link>
+      <router-link class="btn btn-primary w-100" to="#" v-if="product.isActive">+ Ekle</router-link>
       <!-- TODO To eklenecek -->
     </div>
   </div>

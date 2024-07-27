@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <the-header v-if="!$route.meta.hideNavbar"/>
-    <the-main />
+    <the-main id="the-main"/>
     <the-footer v-if="!$route.meta.hideNavbar"/>
   </div>
 </template>
@@ -21,4 +21,8 @@ export default {
 </script>
 
 <style scoped>
+#the-main{
+  max-width: 2000px;
+  margin: 0 auto;
+}
 </style>

@@ -11,7 +11,4 @@ export default {
 </script>
 
 <style scoped>
-#main-view{
-  /* background-color: red; */
-}
 </style>

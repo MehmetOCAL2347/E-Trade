@@ -19,9 +19,10 @@
     "core-js": "^3.8.3",
     "popper.js": "^1.16.1",
     "slick-carousel": "^1.8.1",
+    "swiper": "^11.1.4",
     "vue": "^3.4.15",
+    "vue-js-modal": "^2.0.1",
     "vue-router": "^4.0.3",
-    "vue-slick-carousel": "^1.0.5",
     "vue-star-rating": "^2.1.0",
     "vuex": "^4.0.0"
   },

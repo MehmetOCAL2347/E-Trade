@@ -2,7 +2,7 @@
 
   <!-- Belki Markaya göre de filtre uygulanabilir -->
 
-  <div class="sidebar-sticky">
+  <div class="sidebar-sticky custom-sticky">
     <div id="side-bar-categories" class="form-container">
       <side-bar-categories></side-bar-categories>
     </div>
@@ -37,6 +37,9 @@ export default {
 </script>
 
 <style scoped>
+.custom-sticky{
+  padding: 25px;
+}
 .form-container {
   margin-top: 15px;
   margin-bottom: 15px;
