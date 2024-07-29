@@ -40,7 +40,7 @@ const routes = [
       {
         path: "cart",
         name: "cart",
-        component: () => import("@/components/pages/Users/UserRegister.vue"),
+        component: () => import("@/components/pages/Cart/CartPage.vue"),
         meta: { hideNavbar: false },
       },
       {
