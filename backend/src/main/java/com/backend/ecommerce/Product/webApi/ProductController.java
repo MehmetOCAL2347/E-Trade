@@ -1,7 +1,9 @@
 package com.backend.ecommerce.Product.webApi;
 
+import com.backend.ecommerce.Product.business.requests.ProductCartPageRequest;
 import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
+import com.backend.ecommerce.Product.business.responses.ProductCartPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 
 @RestController
@@ -44,5 +48,10 @@ public class ProductController {
     @GetMapping("/getProductWithIdDummy")
     public Mono<Product> getProductWithIdDummy(){
         return productService.getProductWithIdDummy("ID-B0CH8H1TT8");
+    }
+
+    @PostMapping("/cartDetail")
+    public Flux<ProductCartPageResponse> getCartDetails(@RequestBody ProductCartPageRequest productCartPageRequest){
+        return productService.getCartDetails(productCartPageRequest);
     }
 }

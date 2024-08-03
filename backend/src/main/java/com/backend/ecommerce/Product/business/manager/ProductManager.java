@@ -1,8 +1,10 @@
 package com.backend.ecommerce.Product.business.manager;
 
 import com.backend.ecommerce.Category.business.service.CategoryService;
+import com.backend.ecommerce.Product.business.requests.ProductCartPageRequest;
 import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
+import com.backend.ecommerce.Product.business.responses.ProductCartPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
 import com.backend.ecommerce.Product.business.service.BulletPointsService;
@@ -200,6 +202,49 @@ public class ProductManager implements ProductService {
                         .build()
         );
 
+    }
+
+    @Override
+    public Flux<ProductCartPageResponse> getCartDetails(ProductCartPageRequest productCartPageRequest) {
+        List<ProductCartPageResponse> cartPageResponses = new ArrayList<>();
+
+        // productCartPageRequest henüz kullanılmadı!!!
+
+        ProductCartPageResponse productOne = new ProductCartPageResponse(
+                "PRD001",
+                "Ürün-1 deneme başlık responsive olarak design edilecek",
+                "https://via.placeholder.com/100",
+                100.0,
+                PriceType.TL
+        );
+
+        ProductCartPageResponse productTwo = new ProductCartPageResponse(
+                "PRD002",
+                "Ürün-2 deneme başlık responsive olarak design edilecek",
+                "https://via.placeholder.com/100",
+                120.5,
+                PriceType.TL
+        );
+
+        ProductCartPageResponse productThree = new ProductCartPageResponse(
+                "PRD003",
+                "Ürün-3 deneme başlık responsive olarak design edilecek",
+                "https://via.placeholder.com/100",
+                33.99,
+                PriceType.TL
+        );
+
+        cartPageResponses.add(productOne);
+        cartPageResponses.add(productTwo);
+        cartPageResponses.add(productThree);
+
+        //return Flux.fromIterable(cartPageResponses);
+
+        return Flux.fromIterable(
+                cartPageResponses.stream()
+                        .filter(product -> productCartPageRequest.getCodes().contains(product.getCode()))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
