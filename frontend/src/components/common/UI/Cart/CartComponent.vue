@@ -12,7 +12,6 @@
           :key="index"
         >
           <div class="row">
-
             <div class="col-lg-8">
               <div class="d-flex align-products-center">
                 <img
@@ -38,7 +37,7 @@
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <button
-                      @click="decrement(product)"
+                      @click="updateProductCount(product, -1)"
                       class="btn btn-outline-danger"
                       :disabled="product.quantity <= 1"
                     >
@@ -53,7 +52,7 @@
 
                   <div class="input-group-append">
                     <button
-                      @click="increment(product)"
+                      @click="updateProductCount(product, 1)"
                       class="btn btn-outline-success"
                       :disabled="product.quantity >= 10"
                     >
@@ -62,7 +61,7 @@
                   </div>
 
                   <div class="input-group-append delete-button">
-                    <button @click="removeItem(item)" class="btn btn-danger">
+                    <button @click="removeItem(product)" class="btn btn-danger">
                       <i class="bi bi-trash3"></i>
                     </button>
                   </div>
@@ -70,7 +69,10 @@
 
                 <div class="text-right custom-total-price">
                   <p class="mb-0">
-                    Toplam {{ product.price * product.quantity }}
+                    Toplam
+                    {{
+                      parseFloat(product.price * product.quantity).toFixed(2)
+                    }}
                     {{ product.priceType }}
                   </p>
                 </div>
@@ -86,24 +88,41 @@
 
           <div class="summary-container">
             <p style="text-align: left">{{ titleOfTotalProductCount }}</p>
-            <p style="text-align: right">3 Adet</p>
+            <p style="text-align: right">{{ cartCount }} Adet</p>
           </div>
 
           <div class="summary-container">
             <p style="text-align: left">{{ titleOfShipmentPrice }}</p>
-            <p style="text-align: right">19 TL</p>
+            <p style="text-align: right">{{ titleOfShipmentCost }}</p>
           </div>
 
           <div class="summary-container">
             <p style="text-align: left">{{ titleOfTotalProductPrice }}</p>
-            <p style="text-align: right">500 TL</p>
+            <p style="text-align: right">{{ totalPrice }} TL</p>
           </div>
 
           <hr class="my-line" />
 
           <div class="summary-container">
-            <p style="text-align: left">Sepet Toplamı</p>
-            <p style="text-align: right">519 TL</p>
+            <p style="text-align: left">{{ titleOfMiddlePrice }}</p>
+            <p style="text-align: right">{{ totalPrice }} TL</p>
+          </div>
+
+          <div class="summary-container">
+            <p style="text-align: left">
+              Toplam İndirim Miktarı
+              <span v-if="totalDiscountValue !== 0"
+                >(%{{ totalDiscountValue }})</span
+              >
+            </p>
+            <p style="text-align: right">{{ totalDiscount }} TL</p>
+          </div>
+
+          <hr class="my-line" />
+
+          <div class="summary-container">
+            <p style="text-align: left">Toplam Ödenecek Ücret</p>
+            <p style="text-align: right">{{ totalAllPrice }} TL</p>
           </div>
 
           <div>
@@ -122,6 +141,7 @@
                 id="button-addon"
                 :disabled="!discountCode"
                 :class="{ enabled: discountCode }"
+                @click="getAndCheckDiscount(discountCode)"
               >
                 {{ titleOfDiscountButton }}
               </button>
@@ -149,21 +169,6 @@
 
     <div class="recommended-products mt-5">
       <popular-products></popular-products>
-      <!-- <h4>En Çok Satan Ürünler</h4>
-      <div class="d-flex">
-        <div
-          v-for="product in recommendedProducts"
-          :key="product.id"
-          class="card mr-3"
-          style="width: 18rem"
-        >
-          <img :src="product.image" class="card-img-top" :alt="product.name" />
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">%0 faizli 1000 TL</p>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -172,75 +177,134 @@
 import PopularProducts from "@/components/common/UI/LandingPage/PopularProducts.vue";
 export default {
   components: {
-    PopularProducts
+    PopularProducts,
   },
+  
   data() {
     return {
       titleOfSelectedProducts: "Sipariş Özeti",
       titleOfCreateOrderButton: "Sepeti Onayla",
       titleOfTotalProductCount: "Toplam Ürün",
       titleOfShipmentPrice: "Kargo Toplam",
+      titleOfShipmentCost: "Ücretsiz Kargo",
       titleOfTotalProductPrice: "Ürünlerin Toplamı",
+      titleOfMiddlePrice: "Ara Toplam",
       titleOfTotalCartPrice: "Sepet Toplamı",
       placeHolderOfDiscount: "İndirim Kodunu Gir",
       titleOfDiscountButton: "Uygula",
       isDiscountAreaActive: false,
       discountCode: "",
-      products: [
-        {
-          id: 1,
-          name: "Ürün-1 deneme başlık responsive olarak design edilecek",
-          url: "https://via.placeholder.com/100",
-          price: 100.0,
-          priceType: "TL",
-          quantity: 1,
-          seller: "Yds",
-          deliveryDate: "31 Temmuz Çarşamba",
-        },
-        {
-          id: 2,
-          name: "Ürün-2 deneme başlık ",
-          url: "https://via.placeholder.com/100",
-          price: 223.0,
-          priceType: "TL",
-          quantity: 1,
-          seller: "Yds",
-          deliveryDate: "31 Temmuz Çarşamba",
-        },
-        {
-          id: 3,
-          name: "Ürün-3 deneme başlık responsive olarak design edilecek",
-          url: "https://via.placeholder.com/100",
-          price: 12.5,
-          priceType: "TL",
-          quantity: 1,
-          seller: "Yds",
-          image: "https://via.placeholder.com/100",
-          deliveryDate: "31 Temmuz Çarşamba",
-        },
-      ],
-      recommendedProducts: [
-        { id: 1, name: "Product 1", image: "https://via.placeholder.com/150" },
-        { id: 2, name: "Product 2", image: "https://via.placeholder.com/150" },
-        { id: 3, name: "Product 3", image: "https://via.placeholder.com/150" },
-        { id: 4, name: "Product 4", image: "https://via.placeholder.com/150" },
-      ],
+      totalPriceValue: 0.0,
+      totalDiscountValue: 0, // % olarak girilir
+      totalAllPriceValue: 0.0,
+      products: [],
     };
   },
   methods: {
-    increment(item) {
-      item.quantity++;
+    updateProductCount(product, value) {
+      this.$store.dispatch("updateProductCount", {
+        id: product.code,
+        quantity: value,
+      });
+      product.quantity += value;
     },
-    decrement(item) {
-      if (item.quantity > 1) {
-        item.quantity--;
-      }
-    },
-    removeItem(item) {
-      this.products = this.products.filter((i) => i.id !== item.id);
+    removeItem(product) {
+      this.$store.dispatch("removeItem", {
+        id: product.code,
+      });
+      this.getCartDetailProducts();
     },
     discountAreaActive() {
       this.isDiscountAreaActive = !this.isDiscountAreaActive;
+    },
+    addQuantityToProducts() {
+      let products = this.$store.getters.getDetailCartProducts;
+
+      const productQuantity = this.existCart.map((item) => item.quantity);
+
+      console.log(productQuantity);
+
+      let updatedProducts = products.map((product) => {
+        let storedProduct = this.existCart.find(
+          (item) => item.id === product.code
+        );
+
+        return {
+          ...product,
+          quantity: storedProduct ? storedProduct.quantity : 0,
+        };
+      });
+      this.products = updatedProducts;
+    },
+
+    async getCartDetailProducts() {
+      const productCodes = this.existCart.map((item) => item.id);
+
+      try {
+        await this.$store.dispatch("getCartDetails", {
+          codes: productCodes,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+      this.addQuantityToProducts();
+    },
+    async getAndCheckDiscount(value) {
+      value = value.trim().toUpperCase();
+      try {
+        await this.$store.dispatch("getAndCheckDiscount", {
+          discountCode: value,
+        });
+        this.totalDiscountValue = this.$store.getters.getDiscount.discountValue;
+      } catch (error) {
+        console.log("E01" + error);
+      }
+    },
+  },
+  mounted() {
+    this.getCartDetailProducts();
+  },
+  watch: {
+    existCart(newCart) {
+      console.log("Cart updated", newCart);
+    },
+    totalPrice(newValue) {
+      this.totalPriceValue = newValue;
+      console.log(this.totalPriceValue);
+    },
+  },
+  computed: {
+    existCart() {
+      console.log("hesaplandı");
+      return this.$store.getters.getExistCart;
+    },
+    cartCount() {
+      return this.$store.getters.getCartCount;
+    },
+    totalPrice() {
+      // Kargo ücreti olacaksa onuda burada hesaplatmak gerek!!
+      let totalPrice = 0;
+
+      const quantities = this.products.map(
+        (product) => product.quantity * product.price
+      );
+      quantities.map((price) => (totalPrice += price));
+
+      return parseFloat(totalPrice).toFixed(2);
+    },
+    totalDiscount() {
+      return parseFloat(
+        (this.totalDiscountValue * this.totalPriceValue) / 100
+      ).toFixed(2);
+      //return parseFloat((this.totalDiscountValue * this.totalPriceValue) / 100).toFixed(2);
+    },
+    totalAllPrice() {
+      return parseFloat(
+        this.totalPriceValue -
+          (this.totalDiscountValue * this.totalPriceValue) / 100
+      ).toFixed(2);
+      //return parseFloat(this.totalPriceValue - this.totalDiscountValue).toFixed(2);
     },
   },
 };
@@ -248,7 +312,6 @@ export default {
 
 <style scoped>
 .cart-page {
-  /* max-width: 1200px; */
   margin: 0 auto;
 }
 
@@ -295,30 +358,6 @@ export default {
   outline: none !important;
   box-shadow: none !important;
   border-color: #ccc !important; /* Set to your desired border color */
-}
-
-#discount {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
-  font-size: 14px;
-}
-
-#discount-apply-button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #ccc;
-  color: white;
-  font-weight: bold;
-  border-radius: 0 5px 5px 0;
-  cursor: not-allowed;
-  transition: background-color 0.3s;
-}
-
-#discount-apply-button.enabled {
-  background-color: #4caf50;
-  cursor: pointer;
 }
 
 .quantity-area {

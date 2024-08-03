@@ -80,7 +80,7 @@
           <router-link :to="{ name: 'cart' }">
             <div class="cart-icon">
               <i class="bi bi-cart3 fs-4"></i>
-              <span class="badge">{{ productCartCount }}</span>
+              <span class="badge">{{ cartCount }}</span>
             </div>
           </router-link>
         </div>
@@ -99,6 +99,7 @@ export default {
     return {
       title: "Mande",
       productCartCount: 0,
+      localStorageTitle: "product-in-cart",
       navItems: ["Tüm Ürünler", "Giriş Yap", "Üye Ol", "Sepetim"],
       categories: [
         {
@@ -129,6 +130,15 @@ export default {
         },
       ],
     };
+  },
+  // mounted(){
+  //   let cart = JSON.parse(localStorage.getItem(this.localStorageTitle));
+  //   this.productCartCount = cart.length;
+  // },
+  computed: {
+    cartCount(){
+      return this.$store.getters.getCartCount;
+    }
   },
 };
 </script>

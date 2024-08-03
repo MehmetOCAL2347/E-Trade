@@ -29,7 +29,6 @@
           </div>
 
           <div class="product-description mt-3 p-1">
-
             <router-link
               :to="{ name: 'productDetail', params: { code: product.code } }"
             >
@@ -44,8 +43,9 @@
                 v-if="product.isActive"
                 type="button"
                 class="btn btn-success"
+                @click="addToCart(product.code)"
               >
-                <i class="bi bi-plus"></i> Ekle
+                <i class="bi bi-plus"></i> {{ titleOfAddButton }}
               </button>
               <span class="out-of-stock" v-else>{{ stockMessage }}</span>
             </div>
@@ -54,6 +54,7 @@
       </div>
     </div>
   </div>
+  
 
   <product-quick-view
     :isVisible="this.isQuickViewVisible"
@@ -66,6 +67,7 @@
 </template>
 
 <script>
+import { useToast } from 'vue-toastification';
 export default {
   props: {
     products: [],
@@ -73,26 +75,33 @@ export default {
   },
   data() {
     return {
+      titleOfAddButton: "Ekle",
       isQuickViewVisible: false,
       showIcon: false,
       stockMessage: "Stok Tükenmiştir",
       detailProduct: {},
+      localStorageTitle: "product-in-cart",
+      successMessageForAddingCart: "Ürün başarılı olarak sepete eklendi",
       zoomStyles: {
         backgroundImage: "",
         backgroundSize: "100%",
         backgroundPosition: "center",
       },
+      toast: null
     };
+  },
+  mounted() {
+    this.toast = useToast();
   },
   methods: {
     async getDetailProduct(code) {
       await this.$store.dispatch("getDetailProduct", code);
       this.detailProduct = this.$store.getters.getDetailProduct;
-      this.zoomStyles.backgroundImage= `url(${this.detailProduct.images[0].url})`;
+      this.zoomStyles.backgroundImage = `url(${this.detailProduct.images[0].url})`;
     },
     showQuickView(code) {
       this.isQuickViewVisible = true;
-      this.getDetailProduct(code); 
+      this.getDetailProduct(code);
     },
     closeQuickView() {
       this.isQuickViewVisible = false;
@@ -103,7 +112,14 @@ export default {
     enableScroll() {
       document.body.style.overflow = "";
     },
-  },
+    addToCart(code) {
+      this.$store.dispatch("addToCart", {
+        id: code,
+        quantity: 1,
+      });
+      this.toast(this.successMessageForAddingCart);
+    },
+  },  
 };
 </script>
 
@@ -159,7 +175,7 @@ a:hover {
   align-items: center;
 }
 
-.product-image-container{
+.product-image-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -202,7 +218,7 @@ i:hover {
   display: block;
 }
 
-.out-of-stock{
-    color: var(--color-2);
+.out-of-stock {
+  color: var(--color-2);
 }
 </style>
