@@ -9,7 +9,8 @@ const routes = [
       {
         path: "",
         name: "landing-page",
-        component: () => import("@/components/pages/LandingMainPage/LandingPage.vue"),
+        component: () =>
+          import("@/components/pages/LandingMainPage/LandingPage.vue"),
       },
       {
         path: "products",
@@ -41,6 +42,12 @@ const routes = [
         path: "cart",
         name: "cart",
         component: () => import("@/components/pages/Cart/CartPage.vue"),
+        meta: { hideNavbar: false },
+      },
+      {
+        path: "create-order",
+        name: "create-order",
+        component: () => import("@/components/pages/Order/OrderPage.vue"),
         meta: { hideNavbar: false },
       },
       {

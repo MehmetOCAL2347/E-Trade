@@ -11,6 +11,9 @@ import "@/styles/main.css";
 import router from "./router";
 import store from "./store/index";
 import ProductQuickView from "@/components/common/UI/ProductDetail/ProductQuickView.vue";
+import FloatingInput from "@/components/common/UI/Defaults/FloatingInput.vue";
+import ComboboxInput from "@/components/common/UI/Defaults/ComboboxInput.vue";
+import TextArea from "@/components/common/UI/Defaults/TextArea.vue";
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
@@ -35,5 +38,8 @@ app.use(store);
 app.use(Toast, options);
 
 app.component("product-quick-view", ProductQuickView);
+app.component("floating-input", FloatingInput);
+app.component("combobox-input", ComboboxInput);
+app.component("text-area",TextArea)
 
 app.mount("#app");
