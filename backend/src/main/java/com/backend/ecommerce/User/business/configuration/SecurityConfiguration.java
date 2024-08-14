@@ -59,6 +59,7 @@ public class SecurityConfiguration {
                     // auth.requestMatchers("/products/**").hasAnyRole("ADMIN", "USER");// TODO - 2 permitall demek hatalı
                     auth.requestMatchers("/products/**").permitAll();// TODO - 2 permitall demek hatalı
                     auth.requestMatchers("/discount/query-check-discount/**").permitAll();
+                    auth.requestMatchers("/fetch-data/**").permitAll();
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER");
                     auth.requestMatchers("/cart/**").hasAnyRole("ADMIN", "USER");
