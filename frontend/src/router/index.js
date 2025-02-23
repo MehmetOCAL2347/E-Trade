@@ -55,7 +55,7 @@ const routes = [
         name: "forgot-password",
         component: () => import("@/components/pages/Users/ForgotPassword.vue"),
         meta: { hideNavbar: true },
-      },
+      }
     ],
   },
 

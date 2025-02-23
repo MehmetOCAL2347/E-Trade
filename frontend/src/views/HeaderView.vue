@@ -29,9 +29,7 @@
       </div>
       <div class="container-box">
         <ul class="nav nav-pills">
-          <li
-            class="d-flex flex-wrap justify-content-center align-items-center"
-          >
+          <li class="d-flex flex-wrap justify-content-center align-items-center">
             <router-link aria-current="page" :to="{ name: 'all-products' }">{{
               navItems[0]
             }}</router-link>
@@ -61,9 +59,7 @@
           </li>
         </ul>
       </div>
-      <div
-        class="container-box d-flex justify-content-center align-items-center"
-      >
+      <div class="container-box d-flex justify-content-center align-items-center">
         <div class="icon-with-text m-2 p-2">
           <router-link :to="{ name: 'login' }"
             ><i class="bi bi-box-arrow-in-right fs-4"></i>
@@ -131,14 +127,10 @@ export default {
       ],
     };
   },
-  // mounted(){
-  //   let cart = JSON.parse(localStorage.getItem(this.localStorageTitle));
-  //   this.productCartCount = cart.length;
-  // },
   computed: {
-    cartCount(){
+    cartCount() {
       return this.$store.getters.getCartCount;
-    }
+    },
   },
 };
 </script>

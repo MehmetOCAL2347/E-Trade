@@ -18,7 +18,7 @@ public class Product {
     private String name;
     private String sellerId;
     private String categoryId;
-    private String code;
+    private String code;  // Bunu otomatik biz dolduralım
     private int count;
     private Boolean isActive;
     private Double starPoint;

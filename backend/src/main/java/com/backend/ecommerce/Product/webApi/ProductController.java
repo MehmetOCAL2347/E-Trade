@@ -6,6 +6,7 @@ import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
 import com.backend.ecommerce.Product.business.responses.ProductCartPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
+import com.backend.ecommerce.Product.business.responses.ProductSaveResponse;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.Product.entities.entity.Product;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 
 @RestController
@@ -25,12 +24,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    /*@GetMapping()
-    public Flux<ProductMainPageResponse> getAllProducts() {
-        return productService.getAllProducts();
-    }*/
-
-    @GetMapping("/pd/{code}")
+    @GetMapping("/pd/{code}")  // TODO - burası dummy sonuç dönüyor
     public Mono<ProductDetailPageResponse> getProductDetail(@PathVariable("code") String code) {
         return productService.getProductDetail(code);
     }
@@ -38,16 +32,12 @@ public class ProductController {
     @GetMapping()
     public Flux<ProductMainPageResponse> getProductsWithParams(@ModelAttribute ProductFilterRequest filter) {
         return productService.getProductsWithParams(filter);
+        // Bunu findByDynamicFilters metodu ile yapıcaz
     }
 
-    @PostMapping("/saveNewProduct") // Sadece Admin!?
-    public ResponseEntity<String> saveNewProduct(@RequestBody ProductSaveRequest productSaveRequest){
+    @PostMapping("/saveNewProduct") // TODO Sadece Admin!!!
+    public Mono<ProductSaveResponse> saveNewProduct(@RequestBody ProductSaveRequest productSaveRequest){
         return productService.saveNewProduct(productSaveRequest);
-    }
-
-    @GetMapping("/getProductWithIdDummy")
-    public Mono<Product> getProductWithIdDummy(){
-        return productService.getProductWithIdDummy("ID-B0CH8H1TT8");
     }
 
     @PostMapping("/cartDetail")

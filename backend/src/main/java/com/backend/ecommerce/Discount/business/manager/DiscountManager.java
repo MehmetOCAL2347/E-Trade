@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,5 +38,17 @@ public class DiscountManager implements DiscountService {
                 DiscountResponse.builder()
                         .discountValue(discount.get().getDiscountValue())
                         .build());
+    }
+
+    @Override
+    public Integer getDiscountValue(String discountCode) {
+        Integer discountValue = 0;
+        String trimmedDiscountCode = discountCode.trim();
+        if(!Objects.equals(trimmedDiscountCode, "") || !trimmedDiscountCode.isEmpty()) {
+            discountRulesService.isDiscountExist(trimmedDiscountCode);
+            discountRulesService.isDiscountAlive(trimmedDiscountCode);
+            discountValue = discountRepositoryMongo.findByDiscountCode(trimmedDiscountCode).get().getDiscountValue();
+        }
+        return discountValue;
     }
 }

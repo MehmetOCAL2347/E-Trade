@@ -9,7 +9,8 @@ export default {
     return {
       cart: JSON.parse(localStorage.getItem(localStorageTitle)) || [],
       cartProductDetail: null,
-      discount: { discountValue: 0 }
+      discount: { discountValue: 0 },
+      discountCode: { discountCode: "" }
     };
   },
   actions,

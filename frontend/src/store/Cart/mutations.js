@@ -1,4 +1,5 @@
 let localStorageTitle = "product-in-cart";
+let discountCodeTitle = "discountCode"
 export default {
   addToCart(state, payload) {
     // Retrieve the existing cart from local storage or initialize an empty array
@@ -48,8 +49,10 @@ export default {
     state.cartProductDetail = payload;
   },
   setDiscount(state, payload){
-    console.log("**Payload:");
-    console.log(payload);
     state.discount = payload;
+  },
+  setDiscountCode(state, payload){
+    state.discountCode = payload;
+    localStorage.setItem(discountCodeTitle, JSON.stringify(payload));
   }
 };

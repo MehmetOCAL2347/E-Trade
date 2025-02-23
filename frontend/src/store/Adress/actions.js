@@ -20,6 +20,6 @@ export default {
     },
 
     saveFullAdress(context, params){
-        context.commit("setFullAdress",params);
+        context.commit("setOrderDetail",params);
     }
 }

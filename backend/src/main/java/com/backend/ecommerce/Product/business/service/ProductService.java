@@ -6,7 +6,9 @@ import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
 import com.backend.ecommerce.Product.business.responses.ProductCartPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductDetailPageResponse;
 import com.backend.ecommerce.Product.business.responses.ProductMainPageResponse;
+import com.backend.ecommerce.Product.business.responses.ProductSaveResponse;
 import com.backend.ecommerce.Product.entities.entity.Product;
+import com.backend.ecommerce.UpdatedCart.entities.entity.CartItem;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,8 +20,8 @@ public interface ProductService {
     Mono<ProductDetailPageResponse> getProductDetail(String code);
     Flux<ProductMainPageResponse> getProductsWithParams(ProductFilterRequest productFilterRequest);
     Flux<ProductCartPageResponse> getCartDetails(ProductCartPageRequest productCartPageRequest);
-    Double calculateTotalPriceForCart(List<String> productIds);
-    Mono<Product> getProductWithIdDummy(String id);
-    ResponseEntity<String> saveNewProduct(ProductSaveRequest productSaveRequest);
+    Mono<Double> calculateUpdatedCartTotalPrice(List<CartItem> cartItemList);
+    Mono<Double> calculateTotalPriceForCart(List<CartItem> cartItemList);  // TODO - Nerede kullanılıyor?
+    Mono<ProductSaveResponse> saveNewProduct(ProductSaveRequest productSaveRequest);
 
 }

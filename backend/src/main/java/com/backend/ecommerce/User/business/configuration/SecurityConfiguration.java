@@ -29,7 +29,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class SecurityConfiguration{
     private final RSAKeyProperties keys;
 
     public SecurityConfiguration(RSAKeyProperties keys) {
@@ -58,8 +58,9 @@ public class SecurityConfiguration {
                     //
                     // auth.requestMatchers("/products/**").hasAnyRole("ADMIN", "USER");// TODO - 2 permitall demek hatalı
                     auth.requestMatchers("/products/**").permitAll();// TODO - 2 permitall demek hatalı
-                    auth.requestMatchers("/discount/query-check-discount/**").permitAll();
-                    auth.requestMatchers("/fetch-data/**").permitAll();
+                    auth.requestMatchers("/order/**").permitAll();// TODO - 2 permitall demek hatalı
+                    auth.requestMatchers("/discount/query-check-discount/**").permitAll();// TODO - 2 permitall demek hatalı
+                    auth.requestMatchers("/fetch-data/**").permitAll();// TODO - 2 permitall demek hatalı
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER");
                     auth.requestMatchers("/cart/**").hasAnyRole("ADMIN", "USER");

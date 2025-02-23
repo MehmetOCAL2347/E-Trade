@@ -5,16 +5,17 @@
     ></span>
     <div class="form-floating">
       <input
-        type="text"
+        :type="typeOfInput"
         class="form-control custom-input-group"
         :id="inputId"
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
+        :required="isNecessary"
       />
       <label :for="inputId" class="label-for-input"
         >{{ placeholder }}
-        <strong v-if="requiredArea" class="strong-custom">*</strong></label
+        <strong v-if="isNecessary" class="strong-custom">*</strong></label
       >
     </div>
   </div>
@@ -36,11 +37,6 @@ export default {
       type: String,
       required: true,
     },
-    requiredArea: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     messageText: {
       type: String,
       required: true
@@ -57,6 +53,11 @@ export default {
     modelValue: {
       type: String,
       required: true
+    },
+    isNecessary: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
 };

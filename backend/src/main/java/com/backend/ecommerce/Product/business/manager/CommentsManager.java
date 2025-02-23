@@ -6,6 +6,7 @@ import com.backend.ecommerce.Product.entities.entity.Comments;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,15 +18,20 @@ public class CommentsManager implements CommentsService {
     private CommentsRepositoryMongo commentsRepositoryMongo;
 
     @Override
-    public String saveComments(List<String> comments, String productId) {
+    public Mono<String> saveComments(List<String> comments, String productId) {
+        Comments commentEntity = Comments.builder()
+                .comments(comments)
+                .productId(productId)
+                .build();
 
-        Comments comment = new Comments();
-        comment.setComments(comments);
-        comment.setProductId(productId);
-
-        Comments savedComments = commentsRepositoryMongo.save(comment);
-
-        return savedComments.getId();
-
+        return commentsRepositoryMongo.save(commentEntity).map(
+                savedComment -> {
+                    // TODO return savedCommentId, lambda could be change
+                    return savedComment.getId();
+                })
+                .onErrorResume(ex -> {
+                    // TODO Runtime exception could be updated
+                    return Mono.error(new RuntimeException("Error saving comment: " + ex.getMessage()));
+                });
     }
 }

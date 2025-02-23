@@ -14,11 +14,7 @@
           <div class="row">
             <div class="col-lg-8">
               <div class="d-flex align-products-center">
-                <img
-                  :src="product.url"
-                  alt="Product"
-                  class="img-thumbnail mr-3"
-                />
+                <img :src="product.url" alt="Product" class="img-thumbnail mr-3" />
                 <div class="product-detail-cart">
                   <div>
                     <strong>{{ product.name }}</strong>
@@ -70,9 +66,7 @@
                 <div class="text-right custom-total-price">
                   <p class="mb-0">
                     Toplam
-                    {{
-                      parseFloat(product.price * product.quantity).toFixed(2)
-                    }}
+                    {{ parseFloat(product.price * product.quantity).toFixed(2) }}
                     {{ product.priceType }}
                   </p>
                 </div>
@@ -111,9 +105,7 @@
           <div class="summary-container">
             <p style="text-align: left">
               Toplam İndirim Miktarı
-              <span v-if="totalDiscountValue !== 0"
-                >(%{{ totalDiscountValue }})</span
-              >
+              <span v-if="totalDiscountValue !== 0">(%{{ totalDiscountValue }})</span>
             </p>
             <p style="text-align: right">{{ totalDiscount }} TL</p>
           </div>
@@ -157,10 +149,7 @@
             </div>
           </div>
 
-          <router-link
-            to="/create-order"
-            class="btn btn-success mt-3 custom-order-btn"
-          >
+          <router-link to="/create-order" class="btn btn-success mt-3 custom-order-btn">
             <i class="bi bi-credit-card"></i> {{ titleOfCreateOrderButton }}
           </router-link>
         </div>
@@ -179,7 +168,7 @@ export default {
   components: {
     PopularProducts,
   },
-  
+
   data() {
     return {
       titleOfSelectedProducts: "Sipariş Özeti",
@@ -225,9 +214,7 @@ export default {
       console.log(productQuantity);
 
       let updatedProducts = products.map((product) => {
-        let storedProduct = this.existCart.find(
-          (item) => item.id === product.code
-        );
+        let storedProduct = this.existCart.find((item) => item.id === product.code);
 
         return {
           ...product,
@@ -239,7 +226,6 @@ export default {
 
     async getCartDetailProducts() {
       const productCodes = this.existCart.map((item) => item.id);
-
       try {
         await this.$store.dispatch("getCartDetails", {
           codes: productCodes,
@@ -276,7 +262,7 @@ export default {
   },
   computed: {
     existCart() {
-      console.log("hesaplandı");
+      console.log(this.$store.getters.getExistCart);
       return this.$store.getters.getExistCart;
     },
     cartCount() {
@@ -286,23 +272,20 @@ export default {
       // Kargo ücreti olacaksa onuda burada hesaplatmak gerek!!
       let totalPrice = 0;
 
-      const quantities = this.products.map(
-        (product) => product.quantity * product.price
-      );
+      const quantities = this.products.map((product) => product.quantity * product.price);
       quantities.map((price) => (totalPrice += price));
 
       return parseFloat(totalPrice).toFixed(2);
     },
     totalDiscount() {
-      return parseFloat(
-        (this.totalDiscountValue * this.totalPriceValue) / 100
-      ).toFixed(2);
+      return parseFloat((this.totalDiscountValue * this.totalPriceValue) / 100).toFixed(
+        2
+      );
       //return parseFloat((this.totalDiscountValue * this.totalPriceValue) / 100).toFixed(2);
     },
     totalAllPrice() {
       return parseFloat(
-        this.totalPriceValue -
-          (this.totalDiscountValue * this.totalPriceValue) / 100
+        this.totalPriceValue - (this.totalDiscountValue * this.totalPriceValue) / 100
       ).toFixed(2);
       //return parseFloat(this.totalPriceValue - this.totalDiscountValue).toFixed(2);
     },

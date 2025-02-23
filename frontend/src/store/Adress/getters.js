@@ -6,6 +6,6 @@ export default {
         return state.districtList;
     },
     getExistFullAdress(state){
-        return state.fullAdress;
+        return state.setOrderDetail;
     }
 }

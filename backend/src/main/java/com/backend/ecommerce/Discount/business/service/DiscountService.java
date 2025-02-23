@@ -7,5 +7,6 @@ import reactor.core.publisher.Mono;
 public interface DiscountService {
 
     Mono<DiscountResponse> getAndCheckDiscount(DiscountRequest discountRequest);
+    Integer getDiscountValue(String discountCode);
 
 }

@@ -1,10 +1,7 @@
 package com.backend.ecommerce.User.business.manager;
 
-import com.backend.ecommerce.Cart.business.requests.AddToCartRequest;
-import com.backend.ecommerce.Cart.business.service.CartService;
-import com.backend.ecommerce.Cart.entities.entity.Cart;
-import com.backend.ecommerce.Core.ErrorHandling.RuntimeExceptions.UserFailedException;
 import com.backend.ecommerce.Core.ErrorHandling.RuntimeExceptions.TokenCreationException;
+import com.backend.ecommerce.Core.ErrorHandling.RuntimeExceptions.UserFailedException;
 import com.backend.ecommerce.Core.Mail.Mail;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.User.business.requests.UserLoginRequestDTO;
@@ -50,8 +47,6 @@ public class AuthManager implements AuthServices {
     @Autowired
     private final TokenService tokenService;
     @Autowired
-    private CartService cartService;
-    @Autowired
     private ProductService productService;
     @Autowired
     private Mail mail;
@@ -81,7 +76,7 @@ public class AuthManager implements AuthServices {
                         .email(registrationDto.getEmail())
                         .username(registrationDto.getEmail()) // Username == userMail
                         .password(encodedPassword)
-                        .cartId(cartService.getCartId(new Cart()))
+                        .cartId("NULLLLL")  // TODO
                         .authorities(authorities)
                         .resetToken("")
                         .build()
@@ -131,10 +126,8 @@ public class AuthManager implements AuthServices {
         try {
             if (!tokenService.isUserExpire(splittedToken)) {
                 userId = tokenService.getUserIdFromJwt(splittedToken);
-                cartId = userRepository.findById(userId).get().getCartId();
 
                 userRepository.deleteById(userId);
-                cartService.deletById(cartId);
                 return ResponseEntity.ok(new UserResponseDTO());
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new UserResponseDTO());
@@ -215,6 +208,7 @@ public class AuthManager implements AuthServices {
         }
     }
 
+    /*
     @Override
     public ResponseEntity<String> addProductToCart(String token, AddToCartRequest addToCartRequest) throws ParseException {
 
@@ -239,4 +233,40 @@ public class AuthManager implements AuthServices {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User Id bulunamadı");
         }
     }
+
+     */
+
+    /*
+    @Override
+    public Mono<ResponseEntity<String>> addProductToCart(String token, AddToCartRequest addToCartRequest) throws ParseException{
+        String splittedToken = tokenService.getToken(token);
+
+        if (tokenService.isUserExpire(splittedToken)) {
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User Id bulunamadı"));
+        }
+
+        return userRepository.findById(tokenService.getUserIdFromJwt(splittedToken))
+                .flatMap(user -> cartService.getCart(user.getCartId()))
+                .flatMap(cart -> {
+                    List<CartItem> cartItems = addToCartRequest.
+
+                    List<CartItem> cartItems = addToCartRequest.getProductIds().stream()
+                            .map(productId -> new CartItem(productId, 1)) // Varsayılan miktar 1
+                            .collect(Collectors.toList());
+
+                    cart.setProductIds(cartItems);
+                    cart.setTotalCount(cartItems.size());
+
+                    // Reaktif toplam fiyat hesaplaması
+                    return productService.calculateTotalPriceForCart(
+                                    cartItems.stream().map(CartItem::getId).collect(Collectors.toList())
+                            )
+                            .map(totalPrice -> {
+                                cart.setTotalPrice(totalPrice);
+                                cartService.updateCart(cart);
+                                return ResponseEntity.ok("Products Added To Cart");
+                            });
+                });
+    }*/
+
 }

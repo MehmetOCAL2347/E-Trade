@@ -1,6 +1,5 @@
 package com.backend.ecommerce.Product.business.requests;
 
-import com.backend.ecommerce.Product.entities.entity.BulletPoints;
 import com.backend.ecommerce.Product.entities.entity.Image;
 import com.backend.ecommerce.Product.entities.entity.PriceType;
 import lombok.Builder;
@@ -16,7 +15,7 @@ public class ProductSaveRequest {
     private String name;
     private String sellerId;
     private String categoryName;
-    private String code;
+    //private String code;  // TODO
     private int count;
     private Boolean isActive;
     private Double starPoint;

@@ -65,4 +65,32 @@ public class CategoryManager implements CategoryService {
             return false;
         }
     }
+
+    /**
+     *
+     * @param categoryName
+     * @return
+     * Getting categoryId with CategoryName
+     * If categoryName is not exist so it will be return "Unknown Category"
+     */
+    @Override
+    public Mono<String> getCategoryIdReactive(String categoryName) {
+        return categoryMongoRepository.findByName(categoryName)
+                .map(Category::getId)
+                .defaultIfEmpty("Unknown Category");
+    }
+
+    /**
+     *
+     * @param categoryId
+     * @return
+     * Getting categoryName with CategoryId
+     * If categoryId is not exist so it will be return "Unknown Category"
+     */
+    @Override
+    public Mono<String> getCategoryName(String categoryId) {
+        return categoryMongoRepository.findById(categoryId)
+                .map(Category::getName)
+                .defaultIfEmpty("Unknown Category");
+    }
 }

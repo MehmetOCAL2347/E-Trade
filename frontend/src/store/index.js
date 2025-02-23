@@ -4,6 +4,7 @@ import CatalogModule from '@/store/Catalog/index';
 import UserModule from '@/store/User/index';
 import CartModule from '@/store/Cart/index';
 import AdressModule from '@/store/Adress/index';
+import OrderModule from '@/store/Order/index';
 
 const store = createStore({
     modules: {
@@ -11,7 +12,8 @@ const store = createStore({
         catalogModule: CatalogModule,
         userModule: UserModule,
         cartModule: CartModule,
-        adressModule: AdressModule
+        adressModule: AdressModule,
+        orderModule: OrderModule
     }
 })
 

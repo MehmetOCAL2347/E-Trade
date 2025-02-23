@@ -10,5 +10,8 @@ export default {
     },
     getDiscount(state){
         return state.discount;
+    },
+    getDiscountCode(state){
+        return state.discountCode;
     }
 }

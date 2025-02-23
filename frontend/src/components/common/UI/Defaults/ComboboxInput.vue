@@ -1,13 +1,14 @@
 <template>
   <div>
     <label :for="labelId" class="form-label"
-      >{{ labelInfo }} <span class="span-warning"> * </span></label
+      >{{ labelInfo }} <span v-if="isNecessary" class="span-warning"> * </span></label
     >
     <select
       :id="labelId"
       class="form-select"
       @change="onSelectionChange"
-      :value="value"
+      :value="modelValue"
+      :required="isNecessary"
     >
       <option v-for="(option, index) in optionList" :key="index">
         {{ option.name }}
@@ -34,11 +35,20 @@ export default {
       type: String,
       required: true,
     },
-    value: [String, Number],
+    modelValue: {
+      type: String,
+      required: true,
+    },
+    isNecessary: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
   },
   methods: {
-    onSelectionChange(event) {      
+    onSelectionChange(event) {
       const selectedValue = event.target.value;
+      this.$emit("update:modelValue", selectedValue);
       this.$emit("selection-change", selectedValue);
     },
   },

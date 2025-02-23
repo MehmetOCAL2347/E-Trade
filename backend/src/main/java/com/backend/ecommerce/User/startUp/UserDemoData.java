@@ -1,7 +1,5 @@
 package com.backend.ecommerce.User.startUp;
 
-import com.backend.ecommerce.Cart.business.service.CartService;
-import com.backend.ecommerce.Cart.entities.entity.Cart;
 import com.backend.ecommerce.User.dataAccess.mongo.RoleRepositoryMongo;
 import com.backend.ecommerce.User.dataAccess.mongo.UserRepositoryMongo;
 import com.backend.ecommerce.User.entities.entity.Roles;
@@ -29,9 +27,6 @@ public class UserDemoData {
     private RoleRepositoryMongo roleRepository;
 
     @Autowired
-    private CartService cartService;
-
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     // TODO-4 Belki enum bir class ile yönetebiliriz burayı
@@ -56,7 +51,7 @@ public class UserDemoData {
                 User.builder()
                         .username(DEFAULT_USER_NAME)
                         .password(passwordEncoder.encode(DEFAULT_USER_PASSWORD))
-                        .cartId(cartService.getCartId(new Cart()))
+                        .cartId("NULLL") // TODO
                         .authorities(roles)
                         .email("ocal.mehmet@outlook.com.tr")
                         .resetToken("")

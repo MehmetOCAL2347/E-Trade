@@ -1,8 +1,6 @@
 package com.backend.ecommerce.Core.Serializer;
 
-import com.backend.ecommerce.ExternalConfig.business.responses.DistrictResponse;
 import com.backend.ecommerce.ExternalConfig.business.responses.ProvinceResponse;
-import com.backend.ecommerce.ExternalConfig.entities.entity.District;
 import com.backend.ecommerce.ExternalConfig.entities.entity.Province;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
