@@ -18,6 +18,11 @@ public class BulletPointsManager implements BulletPointsService {
     private BulletPointsRepositoryMongo bulletPointsRepositoryMongo;
 
     @Override
+    public Mono<BulletPoints> findBulletPoint(String productCode) {
+        return bulletPointsRepositoryMongo.findByProductId(productCode);
+    }
+
+    @Override
     public Mono<String> saveBulletPoints(List<String> bulletPoints, String productId) {
 
         BulletPoints bulletPointsEntity = BulletPoints.builder()
@@ -35,18 +40,4 @@ public class BulletPointsManager implements BulletPointsService {
                     return Mono.error(new RuntimeException("Error saving bullet points: " + ex.getMessage()));
                 });
     }
-
-    /*
-    @Override
-    public String saveBulletPoints(List<String> bulletPoints, String productId) {
-
-        BulletPoints bulletPoint = new BulletPoints();
-        bulletPoint.setBulletPoints(bulletPoints);
-        bulletPoint.setProductId(productId);
-
-        BulletPoints savedObject = bulletPointsRepositoryMongo.save(bulletPoint);
-        return savedObject.getBulletId();
-    }
-
-     */
 }

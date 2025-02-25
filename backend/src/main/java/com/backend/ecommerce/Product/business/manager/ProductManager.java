@@ -1,6 +1,7 @@
 package com.backend.ecommerce.Product.business.manager;
 
 import com.backend.ecommerce.Category.business.service.CategoryService;
+import com.backend.ecommerce.Category.entities.entity.Category;
 import com.backend.ecommerce.Product.business.requests.ProductCartPageRequest;
 import com.backend.ecommerce.Product.business.requests.ProductFilterRequest;
 import com.backend.ecommerce.Product.business.requests.ProductSaveRequest;
@@ -14,9 +15,7 @@ import com.backend.ecommerce.Product.business.service.CommentsService;
 import com.backend.ecommerce.Product.business.service.ImageListService;
 import com.backend.ecommerce.Product.business.service.ProductService;
 import com.backend.ecommerce.Product.dataAccess.mongo.ProductRepositoryMongo;
-import com.backend.ecommerce.Product.entities.entity.Image;
-import com.backend.ecommerce.Product.entities.entity.PriceType;
-import com.backend.ecommerce.Product.entities.entity.Product;
+import com.backend.ecommerce.Product.entities.entity.*;
 import com.backend.ecommerce.UpdatedCart.entities.entity.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,38 +117,44 @@ public class ProductManager implements ProductService {
         });
     }
 
+    /**
+     *
+     * @param productCode
+     * @return
+     * Getting product Details from DB with searching productCode value
+     */
     @Override
-    public Mono<ProductDetailPageResponse> getProductDetail(String code) {
+    public Mono<ProductDetailPageResponse> getProductDetail(String productCode) {
 
-        List<String> list = new ArrayList<>();
-        list.add("Yüksek hızlı fırçasız motor, 120AW / 21000Pa'lık güçlü bir emme kuvveti sağlar");
-        list.add("Mande'nin kablosuz araç elektrikli süpürgesi, emsallerimizi 15 dakika kadar aşan, 30 dakikaya varan ultra uzun menzile sahip yepyeni bir çift pil tasarımına sahiptir.");
-        list.add("Mande mini araba elektrikli süpürgesi yalnızca 2,6 pound ağırlığındadır ve elde taşınır ve kablosuz bir tasarıma sahiptir");
-        list.add("Düz nozullar ve fırçalar boşlukları ve tozu temizler. Çok yüzeyli nozullar evcil hayvan tüylerinin üstesinden gelir.");
-        list.add("Araba elektrikli süpürgemiz bir arabayı ve bir odayı 15 dakikada temizleyebilir, temizlik süresini ve sıklığını büyük ölçüde azaltır");
+        Mono<BulletPoints> bulletPointsMono = bulletPointsService.findBulletPoint(productCode);
+        Mono<ImageList> imageListMono = imageListService.findImageList(productCode);
+        Mono<Comments> commentsMono = commentsService.findComments(productCode);
+        Mono<Product> productMono = productRepositoryMongo.findByCode(productCode);
+        Mono<String> categoryMono = productMono.flatMap(product -> categoryService.getCategoryName(product.getCategoryId()));
 
-        List<Image> images = new ArrayList<>();
-        images.add(new Image(Image.ImageType.ONE, "https://m.media-amazon.com/images/I/71moOe5vAiL._AC_SL1500_.jpg"));
-        images.add(new Image(Image.ImageType.TWO, "https://m.media-amazon.com/images/I/719cyx2DOFL._AC_SL1500_.jpg"));
-        images.add(new Image(Image.ImageType.THEREE, "https://m.media-amazon.com/images/I/61YrTQGu-XL._AC_SL1500_.jpg"));
-        images.add(new Image(Image.ImageType.FOUR, "https://m.media-amazon.com/images/I/71LfR1OqsaL._AC_SL1500_.jpg"));
+        // Mono içerisinde zipleyerek asenkron değerleri gönderip tupple içerisinde kullanabiliriz
+        return Mono.zip(productMono, bulletPointsMono, imageListMono, commentsMono, categoryMono)
+                .map(tuple -> {
+                    Product product = tuple.getT1();
+                    BulletPoints bulletPoints = tuple.getT2();
+                    ImageList imageList = tuple.getT3();
+                    Comments comments = tuple.getT4();
+                    String categoryName = tuple.getT5();
 
-        return Mono.just(
-                ProductDetailPageResponse
-                        .builder()
-                        .code(code)
-                        .name("Mande El Araç Süpürgesi Kablosuz, 21000pa Yüksek Güçlü Emişli Taşınabilir Elektrikli Süpürge")
-                        .starPoint(4.5)
-                        .count(20)
-                        .price(23.99)
-                        .priceType(PriceType.TL)
-                        .categoryName("Kategori - 1")
-                        .sellerName("MANDE")
-                        .bulletPoints(list)
-                        .images(images)
-                        .build()
-        );
-
+                    return ProductDetailPageResponse.builder()
+                            .code(product.getCode())
+                            .name(product.getName())
+                            .starPoint(product.getStarPoint())
+                            .count(product.getCount())
+                            .price(product.getPrice())
+                            .priceType(product.getPriceType())
+                            .categoryName(categoryName)
+                            .sellerName(product.getSellerId())
+                            .bulletPoints(bulletPoints.getBulletPoints())
+                            .images(imageList.getImages())
+                            .comments(comments.getComments())
+                            .build();
+                });
     }
 
     @Override

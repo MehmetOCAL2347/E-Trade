@@ -21,5 +21,6 @@ public class ProductDetailPageResponse {
     private String sellerName; // SellerId'den seller name getirilir
     private List<String> bulletPoints;
     private List<Image> images;
+    private List<String> comments;
 
 }

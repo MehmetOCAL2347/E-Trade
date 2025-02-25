@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    Mono<ProductDetailPageResponse> getProductDetail(String code);
+    Mono<ProductDetailPageResponse> getProductDetail(String productCode);
     Flux<ProductMainPageResponse> getProductsWithParams(ProductFilterRequest productFilterRequest);
     Flux<ProductCartPageResponse> getCartDetails(ProductCartPageRequest productCartPageRequest);
     Mono<Double> calculateUpdatedCartTotalPrice(List<CartItem> cartItemList);

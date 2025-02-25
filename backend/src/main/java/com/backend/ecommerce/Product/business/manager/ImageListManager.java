@@ -19,6 +19,11 @@ public class ImageListManager implements ImageListService {
     private ImageListRepositoryMongo imageListRepositoryMongo;
 
     @Override
+    public Mono<ImageList> findImageList(String productCode) {
+        return imageListRepositoryMongo.findByProductId(productCode);
+    }
+
+    @Override
     public Mono<String> saveImage(List<Image> images, String productId) {
         ImageList imageEntity = ImageList.builder()
                 .images(images)

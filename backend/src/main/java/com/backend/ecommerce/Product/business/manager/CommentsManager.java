@@ -18,6 +18,11 @@ public class CommentsManager implements CommentsService {
     private CommentsRepositoryMongo commentsRepositoryMongo;
 
     @Override
+    public Mono<Comments> findComments(String productCode) {
+        return commentsRepositoryMongo.findByProductId(productCode);
+    }
+
+    @Override
     public Mono<String> saveComments(List<String> comments, String productId) {
         Comments commentEntity = Comments.builder()
                 .comments(comments)
